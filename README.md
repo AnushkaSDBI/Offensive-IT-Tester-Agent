@@ -85,6 +85,42 @@ build:
 Data flows down through the components, results come back up. The two gates are the
 responsible-AI control points, and the authorization gate is built first, before any
 payload code exists.
+```
+graph TD
+    %% Styling
+    classDef operator fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef policy fill:#ff9,stroke:#333,stroke-width:2px;
+    classDef router fill:#bbf,stroke:#333,stroke-width:1px;
+    classDef execution fill:#fbb,stroke:#333,stroke-width:2px;
+    classDef analyzer fill:#dfd,stroke:#333,stroke-width:1px;
+    classDef audit fill:#ddd,stroke:#333,stroke-width:1px;
+
+    %% Elements
+    Op[HUMAN OPERATOR]:::operator --> |Scope + Written Authorisation| Gate[Authorisation and Policy Gate<br>allowlist, limits, test window, kill switch]:::policy
+    Gate --> Mapper[Target Context Mapper]:::policy
+    
+    Mapper --> Router[Rule/ML Payload Router<br>transparent baseline]:::router
+    Mapper --> Planner[AI/LLM Planner<br>structured recommendation only]:::router
+    
+    Router --> Registry[Approved Template Registry]:::policy
+    Planner --> Registry
+    
+    Registry --> Check[Risk Check / Human Approval]:::policy
+    Check --> Executor[Sandboxed Request Executor]:::execution
+    
+    Executor --> A1[SQLi/XSS Analyzer]:::analyzer
+    Executor --> A2[CSRF Analyzer]:::analyzer
+    Executor --> A3[SSRF Canary Correlator]:::analyzer
+    Executor --> A4[CmdInj Canary Analyzer]:::analyzer
+    
+    A1 --> Engine[Evidence and Confidence Engine]:::audit
+    A2 --> Engine
+    A3 --> Engine
+    A4 --> Engine
+    
+    Engine --> Report[Risk Scoring + Remediation Report]:::audit
+    Report --> Store[Immutable Audit Event Store]:::audit
+```   
 
 ```
 Authorized target URL
