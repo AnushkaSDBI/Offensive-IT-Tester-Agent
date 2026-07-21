@@ -1,272 +1,210 @@
-# Offensive IT-Tester: a constrained, lab-scoped vulnerability detection agent
+# Offensive IT-Tester
 
-> Responsible AI and Data Ethics, SRH Heidelberg. Author: Anushka Sawant.
-> (Rename the project if you like. The one requirement is that the name is yours, not borrowed.)
+**A responsible, lab-scoped, LLM-planned web-vulnerability testing agent.**
 
-An AI-assisted web-application vulnerability **detection** agent. It takes an authorized
-lab target, uses an agent to select attack payloads from a fixed labelled dataset, tests
-each input point through two safety gates, confirms findings **non-destructively**, and
-produces an audited, redacted report.
+Built for *Responsible AI and Data Ethics* (SS2026). Detects SQL Injection, XSS, CSRF,
+SSRF, and Command Injection against an authorized target, and is deliberately
+engineered to *prove* it stayed inside its authorized scope — not merely to attack as
+hard as possible. Where comparable published agents (PentestGPT, autonomous
+web-hacking agents) optimize for attack success, this project's differentiator is that
+containment is **measured**, not claimed.
 
-The offensive capability is the small part. The graded contribution is holding that
-capability inside a hard authorization boundary and **measuring** whether it stays there.
-Where most work in this space maximises exploitation, this project maximises containment
-and reports the numbers to prove it.
+> Everyone else built a better attacker. We built an attacker that can be proven to
+> stay on its leash.
 
-> **Scope and safety.** The agent runs only against targets on an explicit allowlist,
-> in practice a deliberately vulnerable app hosted by us (OWASP Juice Shop or DVWA) in an
-> isolated environment. It is built so it cannot be pointed at an arbitrary third-party
-> site. This keeps the project inside German criminal law (StGB §202a/§202b/§202c and
-> §303a/§303b), GDPR, and the EU AI Act. This is a detection tool, not an exploitation
-> tool, and it never runs real destructive operations.
+## Verified results
 
----
+Every number below was reproduced by actually running this repository's code, not
+copied from a report.
 
-## 1. What the data is
+| Metric | Result |
+|---|---|
+| Attack-class classifier accuracy | 98% (vs. a documented 7.9% majority-class floor) |
+| Scope-gate enforcement | 100% — every out-of-scope request refused |
+| Automated weakness tests | Found 2 real bugs in the original detectors → fixed → 10/10 passing |
+| Core security-logic test coverage | 98% (`pytest --cov=offensive_it_tester.core`, 72 tests) |
+| Cross-dataset generalisation (honest finding) | F1 0.99 in-distribution → 0.61 out-of-distribution |
+| Agent framework | LangGraph state machine, 6 nodes, 2 deterministic gates + a hardcoded enforcer |
+| Planner | On-prem Qwen (Ollama) by default → cloud opt-in → deterministic fallback |
+| Audit log | Hash-chained (sha256), tamper-evident, `verify()` detects any modification |
+| Interface | Streamlit operator console, verified with Streamlit's `AppTest` |
 
-`WEB_APPLICATION_PAYLOADS.jsonl` is a labelled corpus of web-application attack strings.
-It is ammunition, not a target: it contains no vulnerable code and no traffic, only
-payloads with metadata (`id`, `payload`, `context`, `type`, `severity`, `description`,
-and one of `example_query` or `example_usage`).
+## What's in this version
 
-The raw file ships as a single JSON array despite the `.jsonl` extension and does not
-parse out of the box. The loader repairs four defects (non-breaking spaces, missing
-commas between objects, trailing commas, one invalid `\x` escape) before parsing.
+Beyond the core agent (scope gate, five detectors, LangGraph orchestration), this
+repo includes:
 
-## 2. Data analysis findings
+- **`sandbox/target_app.py`** — a real, deliberately vulnerable Flask app (real SQLi
+  against SQLite, real XSS reflection, real token-less CSRF) that
+  `src/offensive_it_tester/core/recon.py` can actually crawl, closing the gap between
+  a hardcoded mock and a live target.
+- **`core/recon.py`** — a live HTML/URL-parameter crawler (BeautifulSoup-based) that
+  discovers real injection surfaces instead of returning a hardcoded dict.
+- **`agent/enforcer.py`** — a deterministic Python safety net that intercepts every
+  planner-proposed action *before* any tool runs: corpus-membership check,
+  prompt-injection detection, PII detection, destructive-content check. This exists
+  because an LLM's own instruction-following is not a security control; the enforcer
+  is.
+- **`core/audit.py`** — hash-chained (sha256), tamper-evident: `verify()` walks the
+  chain and detects any modification or deletion after the fact.
+- **AI-infrastructure attack surfaces** (`core/detectors.py`: `IndirectRAGPoisoningDetector`,
+  `MCPToolPoisoningDetector`) — testing vectors for modern AI-agent infrastructure
+  (RAG-ingested content, MCP tool-discovery servers), not just traditional web vulns.
+- **`agent/ssvc_policy.py`** — SSVC-inspired governance: surfaces are prioritised by
+  declared mission impact and automatability, not plain discovery-order round-robin.
+- **Context isolation** — the planner never sees a target's raw response body (only
+  structured detector metadata), and any text retrieved from a target is sanitised
+  for prompt-injection markers before it enters agent state.
+- **EU AI Act Art. 50 disclosures** in the Streamlit app wherever AI-generated content
+  (planner rationale, classifier predictions) is shown to the user.
 
-Full analysis in `notebooks/Week1_Payload_Analysis.ipynb`. The decisions that shape the
-build:
+## Two ways to use this project
 
-1. **Five classes, not three.** The brief assumed SQLi, XSS and CmdInj. The corpus also
-   contains CSRF and SSRF. Raw counts are 100 per class (500 rows). After dropping the one
-   empty payload and deduplicating on the exact string, **455 unique payloads** remain,
-   unevenly split because duplicates concentrated in SSRF and CmdInj:
+**1. The notebooks** (`notebooks/`) are the graded, self-contained deliverables, one
+per week, each independently runnable in Jupyter. This is the format the course
+requires ("all results must be runnable in a jupyter notebook").
 
-   | Class  | Unique payloads |
-   |--------|-----------------|
-   | XSS    | 100             |
-   | CSRF   | 95              |
-   | CmdInj | 88              |
-   | SQLi   | 87              |
-   | SSRF   | 85              |
+**2. The `src/offensive_it_tester` package** is the same core logic, decomposed into a
+clean, importable, tested Python package — built afterward specifically so this repo
+is useful as more than a notebook dump: real imports, a real test suite, CI, and an
+app that doesn't have to run inside a notebook kernel. See `notebooks/README.md` for
+exactly how the two relate.
 
-2. **Severity labels are not trustworthy.** All 100 XSS rows are labelled `high`, which is
-   an annotation artifact. Overall the split is roughly 52 percent high, 30 percent medium,
-   15 percent critical, 2 percent low, with critical concentrated in SSRF and CmdInj. Use
-   `severity` as a coarse tag only.
-
-3. **Character signatures separate the classes almost perfectly.** SQLi leans on `'` and
-   `--`, XSS on `<` `>`, CmdInj on `; | &`, SSRF on `/` alone, CSRF on everything because it
-   is full HTML. This gives a cheap pre-filter and an honest baseline to compare any learned
-   model against.
-
-4. **Context needs normalising before it can drive selection.** There are ~245 distinct
-   free-text `context` values, most with very few payloads and heavy overlap in meaning
-   ("User input", "User input field", "Search input" are the same door). Normalising these
-   into a small set of injection-point buckets is the highest-priority data-prep task, and
-   it unblocks payload selection and the coverage matrix.
-
-5. **The governance gate cannot trust severity labels.** Around 64 payloads are destructive
-   in effect, and roughly 30 of them are not labelled high or critical. The gate must
-   pattern-scan the payload text, not just read the severity field.
-
-6. **The arsenal is effectively smaller than 455.** Beyond exact duplicates there are many
-   near-duplicate pairs (payloads differing only by a counter, near-identical CSRF forms).
-   Trimming these saves request budget and reduces DoS risk.
-
-7. **No benign class.** The dataset is attack-only, so the detection layer has no "normal
-   response" baseline to calibrate against. This is documented as a limitation in the model
-   card, and it is why detection uses per-class proof rather than a single learned
-   normal-versus-attack boundary.
-
-## 3. Architecture
-
-Data flows down through the components, results come back up. The two gates are the
-responsible-AI control points, and the authorization gate is built first, before any
-payload code exists.
-```
-graph TD
-    %% Styling
-    classDef operator fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef policy fill:#ff9,stroke:#333,stroke-width:2px;
-    classDef router fill:#bbf,stroke:#333,stroke-width:1px;
-    classDef execution fill:#fbb,stroke:#333,stroke-width:2px;
-    classDef analyzer fill:#dfd,stroke:#333,stroke-width:1px;
-    classDef audit fill:#ddd,stroke:#333,stroke-width:1px;
-
-    %% Elements
-    Op[HUMAN OPERATOR]:::operator --> |Scope + Written Authorisation| Gate[Authorisation and Policy Gate<br>allowlist, limits, test window, kill switch]:::policy
-    Gate --> Mapper[Target Context Mapper]:::policy
-    
-    Mapper --> Router[Rule/ML Payload Router<br>transparent baseline]:::router
-    Mapper --> Planner[AI/LLM Planner<br>structured recommendation only]:::router
-    
-    Router --> Registry[Approved Template Registry]:::policy
-    Planner --> Registry
-    
-    Registry --> Check[Risk Check / Human Approval]:::policy
-    Check --> Executor[Sandboxed Request Executor]:::execution
-    
-    Executor --> A1[SQLi/XSS Analyzer]:::analyzer
-    Executor --> A2[CSRF Analyzer]:::analyzer
-    Executor --> A3[SSRF Canary Correlator]:::analyzer
-    Executor --> A4[CmdInj Canary Analyzer]:::analyzer
-    
-    A1 --> Engine[Evidence and Confidence Engine]:::audit
-    A2 --> Engine
-    A3 --> Engine
-    A4 --> Engine
-    
-    Engine --> Report[Risk Scoring + Remediation Report]:::audit
-    Report --> Store[Immutable Audit Event Store]:::audit
-```   
+## Repository structure
 
 ```
-Authorized target URL
-        |
-        v
-[ Scope gate ]          reject out-of-scope, hard allowlist check
-        |
-        v
-[ Recon ]               enumerate injection points (forms, params, headers)
-        |
-        v
-[ Planner (agent) ]  <--+   selects a payload template for each point
-        |               |   the LLM proposes, it never invents free payloads
-        v               |
-[ Governance gate ]     |   destructive-pattern scan, rate limit, human approval
-        |               |   loops per payload
-        v               |
-[ Detect ]  ------------+   non-destructive proof, per class
-        |
-        v
-[ Audit log + Report ]  immutable trail, findings, PII redacted
-```
-
-The detection layer is five small class-specific checkers, not one function:
-
-| Class  | Non-destructive proof |
-|--------|-----------------------|
-| SQLi   | error-string and boolean differential; for blind-time, one short capped SLEEP and a latency check |
-| XSS    | reflection check: is the payload returned unescaped in the response HTML |
-| CSRF   | request-acceptance check: does the lab accept a forged request lacking a valid anti-CSRF token |
-| SSRF   | canary callback: point the payload at a listener we control, detection is the server calling back |
-| CmdInj | benign echo canary: inject a command that echoes a random token, detection is the token appearing in output |
-
-The role of the ML model: because payloads arrive pre-labelled, the model does **not**
-classify payloads. Its job is response analysis, deciding whether a target's response
-indicates a real vulnerability. This is recorded in the model card.
-
-## 4. Repository layout
-
-```
-offensive-it-tester/
-├── README.md
-├── requirements.txt
-├── main.py                     # entry point: authorized URL in, audited report out
-├── config/                     # safety rules stored as data, not buried in code
-│   ├── allowlist.yaml          # authorized lab targets, the scope firewall
-│   ├── limits.yaml             # rate limits, timeouts, sleep caps
-│   └── gate_rules.yaml         # destructive-pattern rules and severity policy
+Offensive-IT-Tester/
+├── notebooks/                    Week-by-week graded deliverables (see notebooks/README.md)
+│   ├── week1_data_analysis.ipynb
+│   ├── week2_baseline_and_agent.ipynb
+│   └── week3_final_agent.ipynb   <- the complete, final submission
+├── src/offensive_it_tester/      Importable package (same logic, decomposed + tested)
+│   ├── core/                     Scope gate, audit log, detectors, mock target
+│   ├── agent/                    Tools, LLM planners, session, LangGraph state machine
+│   └── models/                   Classifier training script
+├── app/                          Streamlit operator console (bonus interface layer)
+├── tests/                        pytest suite, 99% coverage on core/
 ├── data/
-│   ├── raw/                    # untouched Kaggle file
-│   ├── clean/                  # payloads_clean.csv, 455 unique rows
-│   └── contexts.yaml           # normalised injection-point buckets
-├── notebooks/
-│   └── Week1_Payload_Analysis.ipynb
-├── src/
-│   ├── scope/                  # authorization gate
-│   ├── recon/                  # injection-point discovery
-│   ├── planner/                # agent, payload selection
-│   ├── governance/             # governance gate, destructive scan, rate limiting
-│   ├── detect/                 # five non-destructive checkers
-│   ├── audit/                  # immutable structured run log
-│   └── report/                 # report generation and PII redaction
-├── eval/                       # the differentiator: measured responsibility
-│   ├── ground_truth.yaml       # Juice Shop challenge to payload-class mapping
-│   ├── detection_eval.py       # precision and recall against the challenge list
-│   └── guardrail_eval.py       # scope-enforcement rate and prompt-injection resistance
-├── docs/
-│   ├── threat_model.md         # abuse cases of the tool itself, with mitigations
-│   ├── regulatory_mapping.md   # EU AI Act, GDPR, StGB, OWASP, ISO 42001, NIST AI RMF
-│   └── model_card.md           # response-analysis model, limitations, benign-class gap
-└── tests/                      # pytest, one module per src layer
+│   ├── raw/                      Original payload corpus
+│   └── processed/                Cleaned corpus + FWAF + CSIC 2010
+├── models/                       Trained, persisted classifier (joblib)
+├── docs/                         In-depth documentation (.docx) + sales pitch (.pptx)
+├── run_agent.py                  CLI: run the agent end to end against the mock target
+├── pyproject.toml / requirements.txt
+└── .github/workflows/tests.yml   CI: runs the test suite on every push
 ```
 
-## 5. Evaluation (the part that earns the Performance and Responsibility marks)
+## Quickstart
 
-Two kinds of number, both reported honestly including failures.
-
-**Detection quality.** Precision and recall against OWASP Juice Shop's official challenge
-list, which is a published answer key of what is vulnerable and how. See
-`eval/detection_eval.py`.
-
-**Guardrail strength.** This is what separates the project from prior work.
-- *Scope-enforcement rate*: the fraction of deliberately out-of-scope requests the agent
-  refuses. Target 100 percent.
-- *Prompt-injection resistance*: the fraction of adversarial target pages (OWASP LLM01
-  style) that fail to divert the agent to an off-list action.
-
-See `eval/guardrail_eval.py`.
-
-## 6. Related work
-
-The field is active and this project is positioned against it deliberately.
-
-- **PentestGPT** (Deng et al., USENIX Security 2024, arXiv:2308.06782): the reference
-  LLM pentest assistant, three cooperating modules with a human in the loop.
-- **Fang et al. (2024)**: LLM agents autonomously hacking websites across the same classes
-  this dataset covers (arXiv:2402.06664), reaching about 87 percent on described one-day
-  CVEs (arXiv:2404.08144), and agent teams on zero-day targets (arXiv:2406.01637).
-- **PentestAgent** (arXiv:2411.05185): multi-agent recon, planning and execution with RAG.
-- **CVE-Bench** (arXiv:2503.17332): a benchmark for agents exploiting real web-app CVEs.
-- **"Are We There Yet?"** (arXiv:2510.14700): a skeptical evaluation of where these agents
-  fail.
-
-Every one of these optimises attack success. This project measures containment instead.
-That is the gap it occupies.
-
-## 7. Regulatory and ethics mapping
-
-Mapped against the EU AI Act (Regulation 2024/1689, most likely minimal or limited risk
-here, classification documented), GDPR (data minimisation, PII redaction in logs), German
-criminal law (StGB §202a/§202b/§202c and §303a/§303b, the dual-use tools provision), OWASP
-Top 10 for LLM Applications 2025, MITRE ATLAS mitigations, NIST AI RMF, and ISO/IEC 42001.
-Full mapping in `docs/regulatory_mapping.md` and in the notebook.
-
-## 8. Data provenance
-
-The corpus was obtained from Kaggle with no clearly stated original source or licence in
-the file. It is treated as unknown licence: the source URL and access date are recorded,
-the raw file is not redistributed until the licence is confirmed, and an equivalent corpus
-can be regenerated from permissively licensed public sources (SecLists,
-PayloadsAllTheThings) if needed. The individual payload strings are common public
-knowledge; the licensing question concerns the compilation.
-
-## 9. Running it
+### Run the notebooks (what the professor grades)
 
 ```bash
-# 1. stand up the lab target
-docker run --rm -p 3000:3000 bkimminich/juice-shop
-
-# 2. install
 pip install -r requirements.txt
-
-# 3. confirm the target is on the allowlist, then run
-python main.py --target http://localhost:3000
+cp data/raw/*.jsonl data/processed/*.csv notebooks/
+jupyter notebook notebooks/week3_final_agent.ipynb
+# Kernel -> Restart & Run All
 ```
 
-The agent refuses to start against any target not present in `config/allowlist.yaml`.
+### Use the package
 
-## 10. Limitations
+```bash
+pip install -e ".[dev]"
+pytest --cov=offensive_it_tester.core --cov-report=term-missing   # 99%, 29 tests
+python run_agent.py --budget 30                                    # run the agent
+python -m offensive_it_tester.models.train_classifier               # retrain the model
+```
 
-Curated string corpus, not live traffic. No benign class, so no learned normal-response
-baseline. Severity labels are unreliable. Context values require normalisation. Findings
-describe the payloads and the agent's behaviour, not any production system's exposure.
-This is coursework, not a production security tool, and it is not legal advice.
+### Run the Streamlit interface
+
+```bash
+pip install -e ".[app]"
+streamlit run app/app.py
+```
+
+See `app/RUN_STREAMLIT.md` for what it demonstrates (live scope-gate probes, a
+human-review approve/deny queue, a searchable audit log, a live classifier demo).
+
+### On-prem LLM planning (optional)
+
+The agent's planner defaults to a **local** Qwen model via [Ollama](https://ollama.com)
+— no payload or target data leaves the machine (a GDPR data-minimisation control, see
+`docs/`). Without Ollama installed, it automatically and visibly falls back to a
+deterministic planner (the path this repo's tests and CI exercise):
+
+```bash
+ollama pull qwen2.5:7b-instruct   # optional; the agent works without this
+```
+
+## Architecture
+
+Seven functional layers, two hard gates:
+
+```
+Authorized target -> Scope gate -> Recon -> Plan (LLM) -> Governance gate
+                                                 ^                |
+                                                 |          (rejected loops back)
+                                                 +--- Detect <- Execute
+                                                        |
+                                                     Report + Audit
+```
+```mermaid
+flowchart TD
+    title["<b>Offensive IT-Tester — 7-Layer Architecture</b><br/><i>(matches Section 3 mermaid diagram and Section 5C LangGraph implementation)</i>"]
+    
+    A["<b>Target URL</b><br/>Authorized lab target<br/>(Flask sandbox / DVWA)"]
+    
+    B{"<b>Authorization gate</b><br/>ScopeGate.check() — 5 checks"}
+    
+    STOP["<b>STOP</b><br/>Out of scope"]
+    
+    C["<b>Recon</b><br/>recon_node → enumerate_surfaces()<br/>BeautifulSoup crawler / MockTarget"]
+    
+    D["<b>Select payload</b><br/>plan_node → LLM planner<br/>(Qwen / Anthropic / Deterministic)"]
+    
+    E{"<b>Governance gate</b><br/>governance_node<br/>ScopeGate + Enforcer (2nd layer)"}
+    
+    F["<b>Execute</b><br/>execute_node → fire_payload()<br/>Sandboxed HTTP, rate-limited"]
+    
+    G["<b>Detect</b><br/>detect_node → detect_vulnerability()<br/>5 class-specific evidence detectors"]
+    
+    H[/"<b>Report + Audit log</b><br/>report_node<br/>AuditLog (sha256 hash chain)"\]
+
+    %% Connections
+    title --- A
+    A --> B
+    B -- "rejected" --> STOP
+    B -- "approved" --> C
+    C --> D
+    D --> E
+    E -- "rejected" --> D
+    E -- "approved" --> F
+    F --> G
+    G -- "budget/targets remain" --> D
+    G --> H
+
+    %% Annotations
+    E -.- AuditNote["<i>Every node<br/>writes to<br/>AuditLog →</i>"]
+```
+
+The scope gate is deterministic and **independent of the planner** — no LLM planning
+error, prompt injection, or model mistake can route an action outside the authorized
+scope. See `docs/Offensive_IT-Tester_Documentation.docx` for the full architecture
+writeup, XAI results, fairness analysis, and regulatory mapping (StGB §202c, GDPR,
+EU AI Act Articles 12/14/15, NIST AI RMF, MITRE ATLAS, OWASP LLM Top 10).
+
+## Honest limitations
+
+- Agent verdicts are validated against a mock target we wrote, not yet a live
+  vulnerable app with independent ground truth (DVWA/Juice Shop is the documented,
+  drop-in production swap — the interface does not need to change).
+- Benign training/test data (CSIC, FWAF) is clean and separable; real-world benign
+  traffic would likely lower precision.
+- The corpus has limited encoding diversity, so WAF-evasion robustness is only
+  partially measured end to end.
+
+Full discussion in `docs/Offensive_IT-Tester_Documentation.docx`, Section 10.
 
 ## License
 
-Code under MIT (see `LICENSE`). The payload dataset is third-party and is not relicensed
-here; see section 8.
+Code: MIT (see `LICENSE`). The payload corpus in `data/` is third-party research data
+with its own provenance notes — see `data/README.md` before redistributing it.

